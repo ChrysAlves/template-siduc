@@ -5,13 +5,14 @@ import { cn } from "@/lib/utils";
 
 const Header = () => {
   return (
-    <header className="bg-slate-100 shadow-md p-4">
+    <header className="bg-primary shadow-md p-4 text-white">
       <div className="container mx-auto flex justify-between items-center">
+        <div className="text-2xl font-bold">SISDUC</div>
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
               <NavigationMenuLink 
-                className={cn("px-4 py-2 hover:text-primary transition-colors")}
+                className={cn("px-4 py-2 hover:text-secondary transition-colors")}
                 href="/"
               >
                 Início
@@ -19,7 +20,7 @@ const Header = () => {
             </NavigationMenuItem>
             <NavigationMenuItem>
               <NavigationMenuLink 
-                className={cn("px-4 py-2 hover:text-primary transition-colors")}
+                className={cn("px-4 py-2 hover:text-secondary transition-colors")}
                 href="/sobre"
               >
                 Sobre
@@ -27,7 +28,7 @@ const Header = () => {
             </NavigationMenuItem>
             <NavigationMenuItem>
               <NavigationMenuLink 
-                className={cn("px-4 py-2 hover:text-primary transition-colors")}
+                className={cn("px-4 py-2 hover:text-secondary transition-colors")}
                 href="/contato"
               >
                 Contato
@@ -35,7 +36,6 @@ const Header = () => {
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
-        <div className="text-2xl font-bold text-primary">SISDUC</div>
       </div>
     </header>
   );

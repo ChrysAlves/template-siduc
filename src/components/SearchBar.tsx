@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, Filter } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -23,7 +24,7 @@ const SearchBar = () => {
               <Search className="absolute left-2.5 top-2.5 h-5 w-5 text-muted-foreground" />
               <Input 
                 type="search"
-                placeholder="Buscar documentos..."
+                placeholder="Buscar documentos por número ou palavras..."
                 className="pl-10"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -47,13 +48,18 @@ const SearchBar = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium mb-1">Tipo de documento</label>
-              <select className="w-full p-2 border rounded">
-                <option value="">Todos</option>
-                <option value="relatorio">Relatórios</option>
-                <option value="oficio">Ofícios</option>
-                <option value="memorando">Memorandos</option>
-                <option value="processo">Processos</option>
-              </select>
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione o tipo" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="todos">Todos</SelectItem>
+                  <SelectItem value="relatorio">Relatórios</SelectItem>
+                  <SelectItem value="oficio">Ofícios</SelectItem>
+                  <SelectItem value="memorando">Memorandos</SelectItem>
+                  <SelectItem value="processo">Processos</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">Data inicial</label>
