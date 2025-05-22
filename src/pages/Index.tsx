@@ -30,7 +30,7 @@ const Index = () => {
 
       <main className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8 text-primary">
-          Sistema de Documentação Unificada
+          Sistema de Documentação Urbanística e Cartográfica
         </h1>
 
         <section className="mb-8">
