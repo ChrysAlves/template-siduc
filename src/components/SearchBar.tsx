@@ -3,16 +3,27 @@ import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, Filter } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 
 const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showFilter, setShowFilter] = useState(false);
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Searching for:', searchTerm);
+    console.log('Selected types:', selectedTypes);
     // Implementar lógica de busca aqui
+  };
+
+  const toggleDocumentType = (type: string) => {
+    setSelectedTypes(prev => 
+      prev.includes(type) 
+        ? prev.filter(t => t !== type) 
+        : [...prev, type]
+    );
   };
 
   return (
@@ -45,29 +56,56 @@ const SearchBar = () => {
       
       {showFilter && (
         <div className="mt-4 p-4 border rounded-md bg-slate-50">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Tipo de documento</label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o tipo" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="todos">Todos</SelectItem>
-                  <SelectItem value="relatorio">Relatórios</SelectItem>
-                  <SelectItem value="oficio">Ofícios</SelectItem>
-                  <SelectItem value="memorando">Memorandos</SelectItem>
-                  <SelectItem value="processo">Processos</SelectItem>
-                </SelectContent>
-              </Select>
+              <h3 className="text-sm font-medium mb-2">Tipo de documento</h3>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="filter-relatorios" 
+                    checked={selectedTypes.includes('Relatório')}
+                    onCheckedChange={() => toggleDocumentType('Relatório')}
+                  />
+                  <Label htmlFor="filter-relatorios">Relatórios</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="filter-oficios" 
+                    checked={selectedTypes.includes('Ofício')}
+                    onCheckedChange={() => toggleDocumentType('Ofício')}
+                  />
+                  <Label htmlFor="filter-oficios">Ofícios</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="filter-memorandos" 
+                    checked={selectedTypes.includes('Memorando')}
+                    onCheckedChange={() => toggleDocumentType('Memorando')}
+                  />
+                  <Label htmlFor="filter-memorandos">Memorandos</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="filter-processos" 
+                    checked={selectedTypes.includes('Processo')}
+                    onCheckedChange={() => toggleDocumentType('Processo')}
+                  />
+                  <Label htmlFor="filter-processos">Processos</Label>
+                </div>
+              </div>
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Data inicial</label>
-              <Input type="date" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Data final</label>
-              <Input type="date" />
+              <h3 className="text-sm font-medium mb-2">Período</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs mb-1">Data inicial</label>
+                  <Input type="date" className="h-9" />
+                </div>
+                <div>
+                  <label className="block text-xs mb-1">Data final</label>
+                  <Input type="date" className="h-9" />
+                </div>
+              </div>
             </div>
           </div>
           <div className="mt-4 flex justify-end">
