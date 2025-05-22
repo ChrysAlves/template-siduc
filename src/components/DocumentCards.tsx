@@ -48,14 +48,16 @@ const DocumentCard = ({
             onExpand();
           }}
         >
-          {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          {expanded ? (
+            <ChevronUp className="h-4 w-4" />
+          ) : (
+            <ChevronDown className="h-4 w-4" />
+          )}
         </Button>
       </div>
       {expanded && (
         <div className="mt-4 pt-4 border-t">
-          <h4 className="text-sm font-medium mb-2">
-            Documentos disponíveis:
-          </h4>
+          <h4 className="text-sm font-medium mb-2">Documentos disponíveis:</h4>
           <div className="space-y-3">
             {document.documents.map((doc) => (
               <div
@@ -94,8 +96,8 @@ const DocumentCards = () => {
       type: "Relatório",
       documents: [
         { id: 101, name: "Relatório Técnico", type: "PDF" },
-        { id: 102, name: "Anexo Fotográfico", type: "ZIP" },
-        { id: 103, name: "Dados Complementares", type: "XLSX" },
+        { id: 102, name: "Anexo Fotográfico", type: "PDF" },
+        { id: 103, name: "Dados Complementares", type: "PDF" },
       ],
     },
     {
@@ -106,7 +108,7 @@ const DocumentCards = () => {
       documents: [
         { id: 201, name: "Ofício Principal", type: "PDF" },
         { id: 202, name: "Documentação Anexa", type: "PDF" },
-        { id: 203, name: "Planilha de Dados", type: "XLSX" },
+        { id: 203, name: "Planilha de Dados", type: "PDF" },
       ],
     },
     {
@@ -117,7 +119,7 @@ const DocumentCards = () => {
       documents: [
         { id: 301, name: "Memorando Interno", type: "PDF" },
         { id: 302, name: "Comprovantes", type: "PDF" },
-        { id: 303, name: "Registros Digitais", type: "ZIP" },
+        { id: 303, name: "Registros Digitais", type: "PDF" },
       ],
     },
     {
@@ -128,7 +130,7 @@ const DocumentCards = () => {
       documents: [
         { id: 401, name: "Auto do Processo", type: "PDF" },
         { id: 402, name: "Documentação Probatória", type: "PDF" },
-        { id: 403, name: "Anexos Diversos", type: "ZIP" },
+        { id: 403, name: "Anexos Diversos", type: "PDF" },
       ],
     },
     {
@@ -138,8 +140,8 @@ const DocumentCards = () => {
       type: "Relatório",
       documents: [
         { id: 501, name: "Relatório de Análise", type: "PDF" },
-        { id: 502, name: "Dados Coletados", type: "XLSX" },
-        { id: 503, name: "Imagens", type: "ZIP" },
+        { id: 502, name: "Dados Coletados", type: "PDF" },
+        { id: 503, name: "Imagens", type: "PDF" },
       ],
     },
     {
@@ -150,7 +152,7 @@ const DocumentCards = () => {
       documents: [
         { id: 601, name: "Ofício Circular", type: "PDF" },
         { id: 602, name: "Anexos", type: "PDF" },
-        { id: 603, name: "Tabelas", type: "XLSX" },
+        { id: 603, name: "Tabelas", type: "PDF" },
       ],
     },
     {
@@ -161,7 +163,7 @@ const DocumentCards = () => {
       documents: [
         { id: 701, name: "Memorando de Requisição", type: "PDF" },
         { id: 702, name: "Comprovantes", type: "PDF" },
-        { id: 703, name: "Arquivos Complementares", type: "ZIP" },
+        { id: 703, name: "Arquivos Complementares", type: "PDF" },
       ],
     },
     {
@@ -172,7 +174,7 @@ const DocumentCards = () => {
       documents: [
         { id: 801, name: "Auto do Processo", type: "PDF" },
         { id: 802, name: "Documentos do Caso", type: "PDF" },
-        { id: 803, name: "Material Complementar", type: "ZIP" },
+        { id: 803, name: "Material Complementar", type: "PDF" },
       ],
     },
     {
@@ -182,8 +184,8 @@ const DocumentCards = () => {
       type: "Relatório",
       documents: [
         { id: 901, name: "Relatório Executivo", type: "PDF" },
-        { id: 902, name: "Dados Estatísticos", type: "XLSX" },
-        { id: 903, name: "Anexos", type: "ZIP" },
+        { id: 902, name: "Dados Estatísticos", type: "PDF" },
+        { id: 903, name: "Anexos", type: "PDF" },
       ],
     },
   ];
