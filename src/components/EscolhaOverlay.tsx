@@ -55,7 +55,9 @@ const EscolhaOverlay: React.FC<EscolhaOverlayProps> = ({
                 if (opt.value === "Relatório") {
                   navigate("/relatorio");
                 }
-                // ...outras opções...
+                if (opt.value === "Administração") {
+                  navigate("/administracao"); // Defina a rota desejada aqui
+                }
               }}
               className="w-full bg-red-700 text-white font-semibold py-3 rounded-lg hover:bg-red-800 transition"
             >
