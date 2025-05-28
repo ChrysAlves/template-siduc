@@ -11,6 +11,7 @@ const options = [
   { label: "Pesquisas", value: "Pesquisas" },
   { label: "Relatório", value: "Relatório" },
   { label: "Administração", value: "Administração" },
+  { label: "Gerenciador SISDUC", value: "Gerenciador" },
 ];
 
 const EscolhaOverlay: React.FC<EscolhaOverlayProps> = ({
@@ -54,6 +55,9 @@ const EscolhaOverlay: React.FC<EscolhaOverlayProps> = ({
                 }
                 if (opt.value === "Relatório") {
                   navigate("/relatorio");
+                }
+                if (opt.value === "Gerenciador") {
+                  navigate("/gerenciador");
                 }
                 // ...outras opções...
               }}
