@@ -30,10 +30,12 @@ const SearchOverlay = ({ onSearch, onClose }: SearchOverlayProps) => {
   return (
     <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-2xl">
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold mb-2 text-primary">SISDUC</h1>
-        <p className="text-lg text-gray-600">
-          Sistema de Documentação Unificada
-        </p>
+        <img
+          src="/logosisductext.png"
+          alt="SISDUC"
+          className="h-180 w-auto mx-auto mb-2"
+          style={{ maxHeight: 180 }}
+        />
       </div>
 
       <form
@@ -52,7 +54,7 @@ const SearchOverlay = ({ onSearch, onClose }: SearchOverlayProps) => {
           />
         </div>
 
-        <div className="bg-slate-50 p-4 rounded-md">
+        {/* <div className="bg-slate-50 p-4 rounded-md">
           <h3 className="font-medium mb-3">Filtrar por tipo de documento:</h3>
           <div className="grid grid-cols-2 gap-3">
             <div className="flex items-center space-x-2">
@@ -88,9 +90,9 @@ const SearchOverlay = ({ onSearch, onClose }: SearchOverlayProps) => {
               <Label htmlFor="processos">Processos</Label>
             </div>
           </div>
-        </div>
+        </div> */}
 
-        <Button type="submit" size="lg" className="shadow-lg">
+        <Button type="submit" size="lg" className="shadow-lg bg-red-700">
           Buscar
         </Button>
       </form>

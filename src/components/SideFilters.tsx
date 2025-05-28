@@ -40,24 +40,24 @@ const SideFilters = () => {
           <div className="space-y-2">
             <div className="flex items-center space-x-2">
               <Checkbox id="relatorios" />
-              <Label htmlFor="relatorios">Relatórios</Label>
+              <Label htmlFor="relatorios">TIPO1</Label>
             </div>
             <div className="flex items-center space-x-2">
               <Checkbox id="oficios" />
-              <Label htmlFor="oficios">Ofícios</Label>
+              <Label htmlFor="oficios">TIPO2</Label>
             </div>
             <div className="flex items-center space-x-2">
               <Checkbox id="memorandos" />
-              <Label htmlFor="memorandos">Memorandos</Label>
+              <Label htmlFor="memorandos">TIPO3</Label>
             </div>
             <div className="flex items-center space-x-2">
               <Checkbox id="processos" />
-              <Label htmlFor="processos">Processos</Label>
+              <Label htmlFor="processos">TIPO4</Label>
             </div>
           </div>
         </FilterSection>
 
-        <FilterSection title="Região">
+        {/* <FilterSection title="Região">
           <div className="space-y-2">
             <div className="flex items-center space-x-2">
               <Checkbox id="nordeste" />
@@ -80,9 +80,9 @@ const SideFilters = () => {
               <Label htmlFor="centro-oeste">Centro-Oeste</Label>
             </div>
           </div>
-        </FilterSection>
+        </FilterSection> */}
 
-        <FilterSection title="Período">
+        {/* <FilterSection title="Período">
           <div className="space-y-4">
             <div>
               <Label className="mb-2 block">Ano do documento:</Label>
@@ -90,10 +90,10 @@ const SideFilters = () => {
                 <span>2020</span>
                 <span>2025</span>
               </div>
-              <Slider defaultValue={[2023]} min={2020} max={2025} step={1} />
+              <Slider  defaultValue={[2023]} min={2020} max={2025} step={1} />
             </div>
           </div>
-        </FilterSection>
+        </FilterSection> */}
 
         <FilterSection title="Status">
           <div className="space-y-2">
@@ -113,7 +113,7 @@ const SideFilters = () => {
         </FilterSection>
 
         <div className="mt-6 space-y-2">
-          <Button className="w-full">Aplicar Filtros</Button>
+          <Button className="w-full bg-red-800">Aplicar Filtros</Button>
           <Button variant="outline" className="w-full">Limpar Filtros</Button>
         </div>
       </CardContent>
