@@ -7,7 +7,11 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Relatorio from "./pages/Relatorio";
+
+import Gerenciador from "./pages/Gerenciador";
+
 import Administracao from "./pages/Administracao";
+
 
 // Criando o queryClient fora do componente para evitar recriações
 const queryClient = new QueryClient();
@@ -23,7 +27,11 @@ function App() {
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/relatorio" element={<Relatorio />} />
+
+            <Route path="/gerenciador" element={<Gerenciador />} />
+
             <Route path="/administracao" element={<Administracao />} />
+
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
