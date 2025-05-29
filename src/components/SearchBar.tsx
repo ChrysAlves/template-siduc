@@ -6,9 +6,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 
 interface SearchBarProps {
-  showDateFilters?: boolean;
+  showSearchBar?: boolean; // nova prop
   showStatusFilters?: boolean;
   showTypeFilters?: boolean;
+  showFilterButton?: boolean;
   onApplyFilters?: (filters: {
     status: string[];
     types: string[];
@@ -17,9 +18,10 @@ interface SearchBarProps {
 }
 
 const SearchBar = ({
-  showDateFilters = true,
+  showSearchBar = false,
   showStatusFilters = false,
-  showTypeFilters = true,
+  showTypeFilters = false, // <-- altere aqui para false
+  showFilterButton = false,
   onApplyFilters,
 }: SearchBarProps) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -29,15 +31,11 @@ const SearchBar = ({
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Searching for:", searchTerm);
-    console.log("Selected types:", selectedTypes);
-    console.log("Selected status:", selectedStatus);
     onApplyFilters?.({
       status: selectedStatus,
       types: selectedTypes,
       search: searchTerm,
     });
-    // Implementar lógica de busca aqui
   };
 
   const toggleDocumentType = (type: string) => {
@@ -56,49 +54,40 @@ const SearchBar = ({
 
   return (
     <div className="w-full mb-8">
-      <div className="flex gap-2">
-        <div className="flex-1">
-          <form onSubmit={handleSearch} className="flex gap-2">
-            <div className="relative flex-1">
-              <Search className="absolute left-2.5 top-2.5 h-5 w-5 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Buscar documentos por número ou palavras..."
-                className="pl-10"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-            <Button className="bg-red-800" type="submit">
-              Buscar
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setShowFilter(!showFilter)}
-            >
-              <Filter className="h-5 w-5" />
-              <span className="ml-1 hidden md:inline">Filtros</span>
-            </Button>
-          </form>
-        </div>
-      </div>
-
-      {showFilter && (
+      {(showStatusFilters || showTypeFilters) && (
         <div className="mt-4 p-4 border rounded-md bg-slate-50">
+          {showSearchBar && (
+            <form onSubmit={handleSearch} className="flex gap-2 mb-4 w-full">
+              <div className="relative flex-1">
+                <Search className="absolute left-2.5 top-2.5 h-5 w-5 text-muted-foreground" />
+                <Input
+                  type="search"
+                  placeholder="Buscar documentos por número ou palavras..."
+                  className="pl-10 w-full"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+              <Button className="bg-red-800" type="submit">
+                Buscar
+              </Button>
+            </form>
+          )}
+
+          {/* Filtros */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Filtros de status */}
             {showStatusFilters && (
               <div>
                 <h3 className="text-sm font-medium mb-2">Status</h3>
-                <div className="flex gap-4">
+                <div className="flex gap-4 flex-wrap">
                   <div className="flex items-center space-x-2">
                     <Checkbox
                       id="status-aprovado"
                       checked={selectedStatus.includes("aprovado")}
                       onCheckedChange={() => toggleStatus("aprovado")}
                     />
-                    <Label htmlFor="status-aprovado">Aprovados</Label>
+                    <Label htmlFor="status-aprovado">Aprovado</Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Checkbox
@@ -106,7 +95,7 @@ const SearchBar = ({
                       checked={selectedStatus.includes("pendente")}
                       onCheckedChange={() => toggleStatus("pendente")}
                     />
-                    <Label htmlFor="status-pendente">Pendentes</Label>
+                    <Label htmlFor="status-pendente">Pendente</Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Checkbox
@@ -114,86 +103,115 @@ const SearchBar = ({
                       checked={selectedStatus.includes("anulado")}
                       onCheckedChange={() => toggleStatus("anulado")}
                     />
-                    <Label htmlFor="status-anulado">Anulados</Label>
+                    <Label htmlFor="status-anulado">Anulado</Label>
+                  </div>
+                  {/* Adicione outros status se quiser */}
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="status-aprovado_registrado"
+                      checked={selectedStatus.includes("aprovado_registrado")}
+                      onCheckedChange={() =>
+                        toggleStatus("aprovado_registrado")
+                      }
+                    />
+                    <Label htmlFor="status-aprovado_registrado">
+                      Aprovado - Registrado em cartório
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="status-aprovado_aguardando"
+                      checked={selectedStatus.includes("aprovado_aguardando")}
+                      onCheckedChange={() =>
+                        toggleStatus("aprovado_aguardando")
+                      }
+                    />
+                    <Label htmlFor="status-aprovado_aguardando">
+                      Aprovado - Aguardando Registro
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="status-nao_registrado"
+                      checked={selectedStatus.includes("nao_registrado")}
+                      onCheckedChange={() => toggleStatus("nao_registrado")}
+                    />
+                    <Label htmlFor="status-nao_registrado">
+                      Não registrado
+                    </Label>
                   </div>
                 </div>
               </div>
             )}
+
             {/* Filtros de tipo */}
             {showTypeFilters && (
               <div>
-                <h3 className="text-sm font-medium mb-2">Tipo de documento</h3>
-                <div className="grid grid-cols-2 gap-2">
+                <h3 className="text-sm font-medium mb-2">Tipo de Projeto</h3>
+                <div className="flex gap-4 flex-wrap">
                   <div className="flex items-center space-x-2">
                     <Checkbox
-                      id="filter-relatorios"
+                      id="tipo-relatorio"
                       checked={selectedTypes.includes("Relatório")}
                       onCheckedChange={() => toggleDocumentType("Relatório")}
                     />
-                    <Label htmlFor="filter-relatorios">Relatórios</Label>
+                    <Label htmlFor="tipo-relatorio">Relatório</Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Checkbox
-                      id="filter-oficios"
+                      id="tipo-oficio"
                       checked={selectedTypes.includes("Ofício")}
                       onCheckedChange={() => toggleDocumentType("Ofício")}
                     />
-                    <Label htmlFor="filter-oficios">Ofícios</Label>
+                    <Label htmlFor="tipo-oficio">Ofício</Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Checkbox
-                      id="filter-memorandos"
+                      id="tipo-memorando"
                       checked={selectedTypes.includes("Memorando")}
                       onCheckedChange={() => toggleDocumentType("Memorando")}
                     />
-                    <Label htmlFor="filter-memorandos">Memorandos</Label>
+                    <Label htmlFor="tipo-memorando">Memorando</Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Checkbox
-                      id="filter-processos"
+                      id="tipo-processo"
                       checked={selectedTypes.includes("Processo")}
                       onCheckedChange={() => toggleDocumentType("Processo")}
                     />
-                    <Label htmlFor="filter-processos">Processos</Label>
-                  </div>
-                </div>
-              </div>
-            )}
-            {/* Filtros de data */}
-            {showDateFilters && (
-              <div>
-                <h3 className="text-sm font-medium mb-2">Período</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs mb-1">Data inicial</label>
-                    <Input type="date" className="h-9" />
-                  </div>
-                  <div>
-                    <label className="block text-xs mb-1">Data final</label>
-                    <Input type="date" className="h-9" />
+                    <Label htmlFor="tipo-processo">Processo</Label>
                   </div>
                 </div>
               </div>
             )}
           </div>
-          <div className="mt-4 flex justify-end">
-            <Button variant="outline" className="mr-2">
-              Limpar
-            </Button>
-            <Button
-              className="bg-red-800"
-              onClick={() =>
-                onApplyFilters?.({
-                  status: selectedStatus, // array de status selecionados
-                  types: selectedTypes, // array de tipos selecionados
-                  search: searchTerm, // termo de busca
-                })
-              }
-            >
-              Aplicar filtros
-            </Button>
-          </div>
+          {/* Botão aplicar filtros */}
+          {(showStatusFilters || showTypeFilters) && (
+            <div className="mt-4">
+              <Button className="bg-red-800" onClick={handleSearch}>
+                Aplicar filtros
+              </Button>
+            </div>
+          )}
         </div>
+      )}
+      {/* Se NÃO tiver filtros, mas showSearchBar for true, mostra a barra de busca sozinha */}
+      {!(showStatusFilters || showTypeFilters) && showSearchBar && (
+        <form onSubmit={handleSearch} className="flex gap-2 mb-4 w-full">
+          <div className="relative flex-1">
+            <Search className="absolute left-2.5 top-2.5 h-5 w-5 text-muted-foreground" />
+            <Input
+              type="search"
+              placeholder="Buscar documentos por número ou palavras..."
+              className="pl-10 w-full"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <Button className="bg-red-800" type="submit">
+            Buscar
+          </Button>
+        </form>
       )}
     </div>
   );

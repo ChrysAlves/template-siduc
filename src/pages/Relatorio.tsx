@@ -167,8 +167,9 @@ const Relatorio = () => {
     <div className="min-h-screen bg-slate-50">
       <Header />
       <main className="container mx-auto px-4 py-8">
+        {/* Filtros sempre visíveis, sem barra de busca */}
         <SearchBar
-          showDateFilters={false}
+          showSearchBar={false}
           showStatusFilters={true}
           showTypeFilters={true}
           onApplyFilters={handleApplyFilters}

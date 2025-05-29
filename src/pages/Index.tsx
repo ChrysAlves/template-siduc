@@ -42,7 +42,11 @@ const Index = () => {
 
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">Pesquisar Documentos</h2>
-          <SearchBar />
+          <SearchBar
+            showSearchBar={true}
+            showStatusFilters={false}
+            showTypeFilters={false}
+          />
         </section>
 
         <section>

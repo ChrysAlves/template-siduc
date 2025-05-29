@@ -12,6 +12,7 @@ const options = [
   { label: "Relatório", value: "Relatório" },
   { label: "Administração", value: "Administração" },
   { label: "Gerenciador SISDUC", value: "Gerenciador" },
+  { label: "Formulário", value: "Formulario" }, // NOVA OPÇÃO
 ];
 
 const EscolhaOverlay: React.FC<EscolhaOverlayProps> = ({
@@ -56,16 +57,15 @@ const EscolhaOverlay: React.FC<EscolhaOverlayProps> = ({
                 if (opt.value === "Relatório") {
                   navigate("/relatorio");
                 }
-
                 if (opt.value === "Gerenciador") {
                   navigate("/gerenciador");
                 }
-                // ...outras opções...
-
                 if (opt.value === "Administração") {
-                  navigate("/administracao"); // Defina a rota desejada aqui
+                  navigate("/administracao");
                 }
-
+                if (opt.value === "Formulario") {
+                  navigate("/formulario", { state: { fromLogin: true } });
+                }
               }}
               className="w-full bg-red-700 text-white font-semibold py-3 rounded-lg hover:bg-red-800 transition"
             >

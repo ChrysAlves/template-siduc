@@ -3,7 +3,7 @@ import React, { useState } from "react";
 interface LoginOverlayProps {
   open: boolean;
   onClose: () => void;
-  onLoginSucesso: () => void; // NOVA PROP
+  onLoginSucesso: () => void;
 }
 
 const LoginOverlay: React.FC<LoginOverlayProps> = ({
@@ -11,14 +11,32 @@ const LoginOverlay: React.FC<LoginOverlayProps> = ({
   onClose,
   onLoginSucesso,
 }) => {
+  const [isRegister, setIsRegister] = useState(false);
   const [user, setUser] = useState("");
   const [pass, setPass] = useState("");
+  // Campos de cadastro
+  const [email, setEmail] = useState("");
+  const [matricula, setMatricula] = useState("");
+  const [orgao, setOrgao] = useState("");
+  const [confirmPass, setConfirmPass] = useState("");
 
   if (!open) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    onLoginSucesso(); // Chama para abrir o EscolhaOverlay
+    onLoginSucesso();
+  };
+
+  const handleRegister = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Aqui você pode adicionar validação e lógica de cadastro
+    if (pass !== confirmPass) {
+      alert("As senhas não coincidem!");
+      return;
+    }
+    // Simula cadastro
+    alert("Cadastro realizado com sucesso!");
+    setIsRegister(false);
   };
 
   return (
@@ -40,28 +58,100 @@ const LoginOverlay: React.FC<LoginOverlayProps> = ({
             style={{ maxHeight: 180 }}
           />
         </div>
-        <form className="w-full flex flex-col gap-4" onSubmit={handleSubmit}>
-          <input
-            type="text"
-            className="w-full border-2 border-red-700 rounded-lg px-4 py-3 focus:outline-none focus:border-red-700 text-lg"
-            placeholder="Usuário"
-            value={user}
-            onChange={(e) => setUser(e.target.value)}
-          />
-          <input
-            type="password"
-            className="w-full border-2 border-red-700 rounded-lg px-4 py-3 focus:outline-none focus:border-red-700 text-lg"
-            placeholder="Senha"
-            value={pass}
-            onChange={(e) => setPass(e.target.value)}
-          />
-          <button
-            type="submit"
-            className="w-full bg-red-700 text-white font-semibold py-3 rounded-lg mt-2 hover:bg-red-800 transition"
-          >
-            Entrar
-          </button>
-        </form>
+        {isRegister ? (
+          <>
+            <form
+              className="w-full flex flex-col gap-4"
+              onSubmit={handleRegister}
+            >
+              <input
+                type="email"
+                className="w-full border-2 border-red-700 rounded-lg px-4 py-3 focus:outline-none focus:border-red-700 text-lg"
+                placeholder="E-mail institucional"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <input
+                type="text"
+                className="w-full border-2 border-red-700 rounded-lg px-4 py-3 focus:outline-none focus:border-red-700 text-lg"
+                placeholder="Matrícula"
+                value={matricula}
+                onChange={(e) => setMatricula(e.target.value)}
+                required
+              />
+              <input
+                type="text"
+                className="w-full border-2 border-red-700 rounded-lg px-4 py-3 focus:outline-none focus:border-red-700 text-lg"
+                placeholder="Órgão"
+                value={orgao}
+                onChange={(e) => setOrgao(e.target.value)}
+                required
+              />
+              <input
+                type="password"
+                className="w-full border-2 border-red-700 rounded-lg px-4 py-3 focus:outline-none focus:border-red-700 text-lg"
+                placeholder="Senha"
+                value={pass}
+                onChange={(e) => setPass(e.target.value)}
+                required
+              />
+              <input
+                type="password"
+                className="w-full border-2 border-red-700 rounded-lg px-4 py-3 focus:outline-none focus:border-red-700 text-lg"
+                placeholder="Confirmar senha"
+                value={confirmPass}
+                onChange={(e) => setConfirmPass(e.target.value)}
+                required
+              />
+              <button
+                type="submit"
+                className="w-full bg-red-700 text-white font-semibold py-3 rounded-lg mt-2 hover:bg-red-800 transition"
+              >
+                Cadastrar
+              </button>
+            </form>
+            <button
+              className="mt-4 text-red-700 underline"
+              onClick={() => setIsRegister(false)}
+              type="button"
+            >
+              Já tem cadastro? Fazer login
+            </button>
+          </>
+        ) : (
+          <>
+            <form className="w-full flex flex-col gap-4" onSubmit={handleLogin}>
+              <input
+                type="text"
+                className="w-full border-2 border-red-700 rounded-lg px-4 py-3 focus:outline-none focus:border-red-700 text-lg"
+                placeholder="Usuário"
+                value={user}
+                onChange={(e) => setUser(e.target.value)}
+              />
+              <input
+                type="password"
+                className="w-full border-2 border-red-700 rounded-lg px-4 py-3 focus:outline-none focus:border-red-700 text-lg"
+                placeholder="Senha"
+                value={pass}
+                onChange={(e) => setPass(e.target.value)}
+              />
+              <button
+                type="submit"
+                className="w-full bg-red-700 text-white font-semibold py-3 rounded-lg mt-2 hover:bg-red-800 transition"
+              >
+                Entrar
+              </button>
+            </form>
+            <button
+              className="mt-4 text-red-700 underline"
+              onClick={() => setIsRegister(true)}
+              type="button"
+            >
+              Não tem cadastro? Clique aqui
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

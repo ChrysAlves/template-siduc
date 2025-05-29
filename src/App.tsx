@@ -11,7 +11,7 @@ import Relatorio from "./pages/Relatorio";
 import Gerenciador from "./pages/Gerenciador";
 
 import Administracao from "./pages/Administracao";
-
+import Formulario from "@/pages/Formulario";
 
 // Criando o queryClient fora do componente para evitar recriações
 const queryClient = new QueryClient();
@@ -31,6 +31,7 @@ function App() {
             <Route path="/gerenciador" element={<Gerenciador />} />
 
             <Route path="/administracao" element={<Administracao />} />
+            <Route path="/formulario" element={<Formulario />} />
 
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

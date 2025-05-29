@@ -1,11 +1,10 @@
-
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Slider } from '@/components/ui/slider';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Slider } from "@/components/ui/slider";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface FilterSectionProps {
   title: string;
@@ -14,11 +13,11 @@ interface FilterSectionProps {
 
 const FilterSection = ({ title, children }: FilterSectionProps) => {
   const [isOpen, setIsOpen] = React.useState(true);
-  
+
   return (
     <div className="mb-6">
-      <div 
-        className="flex justify-between items-center cursor-pointer mb-2" 
+      <div
+        className="flex justify-between items-center cursor-pointer mb-2"
         onClick={() => setIsOpen(!isOpen)}
       >
         <h3 className="font-semibold">{title}</h3>
@@ -36,65 +35,70 @@ const SideFilters = () => {
         <CardTitle className="text-lg">Filtros</CardTitle>
       </CardHeader>
       <CardContent>
-        <FilterSection title="Tipo de Documento">
+        {/* RA */}
+        <FilterSection title="RA">
           <div className="space-y-2">
             <div className="flex items-center space-x-2">
-              <Checkbox id="relatorios" />
-              <Label htmlFor="relatorios">TIPO1</Label>
+              <Checkbox id="paranoa" />
+              <Label htmlFor="paranoa">Paranoá</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <Checkbox id="oficios" />
-              <Label htmlFor="oficios">TIPO2</Label>
+              <Checkbox id="ceilandia" />
+              <Label htmlFor="ceilandia">Ceilândia</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <Checkbox id="memorandos" />
-              <Label htmlFor="memorandos">TIPO3</Label>
+              <Checkbox id="asasul" />
+              <Label htmlFor="asasul">Asa Sul</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <Checkbox id="processos" />
-              <Label htmlFor="processos">TIPO4</Label>
+              <Checkbox id="samambaia" />
+              <Label htmlFor="samambaia">Samambaia</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox id="aguasclaras" />
+              <Label htmlFor="aguasclaras">Águas Claras</Label>
             </div>
           </div>
         </FilterSection>
 
-        {/* <FilterSection title="Região">
+        {/* Tipo de Projeto */}
+        <FilterSection title="Tipo de Projeto">
           <div className="space-y-2">
             <div className="flex items-center space-x-2">
-              <Checkbox id="nordeste" />
-              <Label htmlFor="nordeste">Nordeste</Label>
+              <Checkbox id="residencial" />
+              <Label htmlFor="residencial">Residencial</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <Checkbox id="norte" />
-              <Label htmlFor="norte">Norte</Label>
+              <Checkbox id="comercial" />
+              <Label htmlFor="comercial">Comercial</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <Checkbox id="sudeste" />
-              <Label htmlFor="sudeste">Sudeste</Label>
+              <Checkbox id="misto" />
+              <Label htmlFor="misto">Misto</Label>
             </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox id="sul" />
-              <Label htmlFor="sul">Sul</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox id="centro-oeste" />
-              <Label htmlFor="centro-oeste">Centro-Oeste</Label>
-            </div>
+            {/* Adicione outros tipos se necessário */}
           </div>
-        </FilterSection> */}
+        </FilterSection>
 
-        {/* <FilterSection title="Período">
-          <div className="space-y-4">
-            <div>
-              <Label className="mb-2 block">Ano do documento:</Label>
-              <div className="flex justify-between text-xs text-gray-500 mb-1">
-                <span>2020</span>
-                <span>2025</span>
-              </div>
-              <Slider  defaultValue={[2023]} min={2020} max={2025} step={1} />
-            </div>
-          </div>
-        </FilterSection> */}
+        {/* Processo SEI */}
+        <FilterSection title="Processo SEI">
+          <input
+            type="text"
+            className="border rounded px-2 py-1 w-full"
+            placeholder="Digite o número do processo SEI"
+          />
+        </FilterSection>
 
+        {/* Processo de Alterações */}
+        <FilterSection title="Processo de Alterações">
+          <input
+            type="text"
+            className="border rounded px-2 py-1 w-full"
+            placeholder="Digite o número do processo de alteração"
+          />
+        </FilterSection>
+
+        {/* Status */}
         <FilterSection title="Status">
           <div className="space-y-2">
             <div className="flex items-center space-x-2">
@@ -102,19 +106,33 @@ const SideFilters = () => {
               <Label htmlFor="aprovado">Aprovado</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <Checkbox id="pendente" />
-              <Label htmlFor="pendente">Pendente</Label>
+              <Checkbox id="aprovado_registrado" />
+              <Label htmlFor="aprovado_registrado">
+                Aprovado - Registrado em cartório
+              </Label>
             </div>
             <div className="flex items-center space-x-2">
-              <Checkbox id="arquivado" />
-              <Label htmlFor="arquivado">Arquivado</Label>
+              <Checkbox id="aprovado_aguardando" />
+              <Label htmlFor="aprovado_aguardando">
+                Aprovado - Aguardando Registro
+              </Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox id="anulado" />
+              <Label htmlFor="anulado">Anulado</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox id="nao_registrado" />
+              <Label htmlFor="nao_registrado">Não registrado</Label>
             </div>
           </div>
         </FilterSection>
 
         <div className="mt-6 space-y-2">
           <Button className="w-full bg-red-800">Aplicar Filtros</Button>
-          <Button variant="outline" className="w-full">Limpar Filtros</Button>
+          <Button variant="outline" className="w-full">
+            Limpar Filtros
+          </Button>
         </div>
       </CardContent>
     </Card>
