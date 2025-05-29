@@ -77,6 +77,39 @@ const DocumentCard = ({
 }) => {
   const { urb, middle, suffix } = parseNumber(document.number);
 
+  // Exemplo de anexos fictícios para cada documento
+  const files = [
+    { name: `${document.number}-anexo1`, label: "Matriz de Localização", icon: <Download className="w-4 h-4" /> },
+    { name: `${document.number}-anexo2`, label: "Planta de Situação", icon: <Download className="w-4 h-4" /> },
+    { name: `${document.number}-anexo3`, label: "Memorial Descritivo", icon: <Download className="w-4 h-4" /> },
+  ];
+
+  // Função para baixar um arquivo individual
+  const handleDownload = (fileName: string) => {
+    const url = `/arquivos/${fileName}.pdf`;
+
+    // Verifica se o ambiente é o navegador
+    if (typeof window !== "undefined" && typeof document !== "undefined") {
+      try {
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (error) {
+        console.error("Erro ao tentar baixar o arquivo:", error);
+      }
+    } else {
+      console.error("Ambiente não suporta downloads.");
+    }
+  };
+
+  // Função para baixar todos os arquivos
+  const handleDownloadAll = () => {
+    files.forEach((file) => handleDownload(file.name));
+  };
+
   return (
     <Card
       className={`shadow-md hover:shadow-lg transition-shadow cursor-pointer select-none ${
@@ -143,6 +176,43 @@ const DocumentCard = ({
                   {document.dataCartorio}
                 </p>
               )}
+            </div>
+          </div>
+        )}
+        {expanded && (
+          <div className="mt-8">
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 shadow-inner">
+              <div className="font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                <Download className="w-5 h-5 text-red-700" />
+                Anexos disponíveis
+              </div>
+              <button
+                type="button"
+                className="mb-4 flex items-center gap-2 bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded transition text-sm font-semibold shadow"
+                onClick={e => {
+                  e.stopPropagation();
+                  handleDownloadAll();
+                }}
+              >
+                <Download className="w-4 h-4" />
+                Baixar todos os anexos
+              </button>
+              <div className="flex flex-wrap gap-3">
+                {files.map((file, idx) => (
+                  <button
+                    key={file.name}
+                    type="button"
+                    className="flex items-center gap-2 bg-white border border-slate-300 hover:bg-red-50 text-slate-800 px-3 py-2 rounded shadow-sm transition text-sm font-medium"
+                    onClick={e => {
+                      e.stopPropagation();
+                      handleDownload(file.name);
+                    }}
+                  >
+                    {file.icon}
+                    {file.label}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         )}

@@ -92,37 +92,6 @@ const Administracao: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50">
       <Header />
-      {/* Botão de notificações no topo */}
-      <div className="container mx-auto flex justify-end mt-6 px-4 relative">
-        <button
-          className="flex items-center gap-2 bg-red-700 text-white px-4 py-2 rounded-lg shadow hover:bg-red-800 transition"
-          onClick={() => setShowNotifications((v) => !v)}
-        >
-          <span className="material-icons">notifications</span>
-          Notificações
-        </button>
-        {showNotifications && (
-          <div
-            ref={notifRef}
-            className="absolute right-0 mt-14 w-80 bg-white rounded-xl shadow-2xl border z-50 p-4"
-          >
-            <h3 className="font-semibold mb-2 text-red-700">Notificações</h3>
-            <ul className="space-y-2">
-              <li className="bg-slate-100 rounded p-2">
-                <span className="font-bold">12</span> projetos registrados hoje
-              </li>
-              <li className="bg-slate-100 rounded p-2">
-                <span className="font-bold">3</span> cadastros pendentes de
-                aprovação
-              </li>
-              <li className="bg-slate-100 rounded p-2">
-                <span className="font-bold">1</span> projeto aguardando
-                documentação
-              </li>
-            </ul>
-          </div>
-        )}
-      </div>
       <main className="container mx-auto mt-28 px-4 py-4">
         <div className="flex items-center gap-4 mb-6">
           <button className="bg-gray-200 px-3 py-2 rounded-lg flex items-center gap-2 text-gray-700 shadow-sm">
