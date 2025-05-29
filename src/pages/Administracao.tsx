@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Header from "@/components/Header";
 
 const membrosExemplo = [
@@ -60,6 +60,22 @@ const funcoes = [
 
 const Administracao: React.FC = () => {
   const [membros, setMembros] = useState(membrosExemplo);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const notifRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!showNotifications) return;
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        notifRef.current &&
+        !notifRef.current.contains(event.target as Node)
+      ) {
+        setShowNotifications(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showNotifications]);
 
   const handleFuncaoChange = (index: number, novaFuncao: string) => {
     const novosMembros = [...membros];
@@ -76,8 +92,6 @@ const Administracao: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50">
       <Header />
-      {/* Header vermelho mais afastado, menor e descolado das laterais */}
-      
       <main className="container mx-auto mt-28 px-4 py-4">
         <div className="flex items-center gap-4 mb-6">
           <button className="bg-gray-200 px-3 py-2 rounded-lg flex items-center gap-2 text-gray-700 shadow-sm">
@@ -107,7 +121,10 @@ const Administracao: React.FC = () => {
             </thead>
             <tbody>
               {membros.map((m, idx) => (
-                <tr key={idx} className="border-b last:border-b-0 hover:bg-gray-50 transition">
+                <tr
+                  key={idx}
+                  className="border-b last:border-b-0 hover:bg-gray-50 transition"
+                >
                   <td className="py-4 px-4 flex items-center gap-3">
                     <span
                       className={`w-10 h-10 flex items-center justify-center rounded-full text-white font-bold text-base ${m.cor}`}
@@ -123,12 +140,16 @@ const Administracao: React.FC = () => {
                     {m.origem.startsWith("Membro direto por") ? (
                       <>
                         <div className="text-gray-700">Membro direto por</div>
-                        <div className="text-red-700">{m.origem.replace("Membro direto por ", "")}</div>
+                        <div className="text-red-700">
+                          {m.origem.replace("Membro direto por ", "")}
+                        </div>
                       </>
                     ) : m.origem.startsWith("Herdado de") ? (
                       <>
                         <div className="text-gray-700">Herdado de</div>
-                        <div className="text-red-700">{m.origem.replace("Herdado de ", "")}</div>
+                        <div className="text-red-700">
+                          {m.origem.replace("Herdado de ", "")}
+                        </div>
                       </>
                     ) : (
                       <div className="text-gray-700">{m.origem}</div>
@@ -138,11 +159,22 @@ const Administracao: React.FC = () => {
                     <div className="relative flex items-center justify-center">
                       <select
                         value={m.funcao}
-                        onChange={(e) => handleFuncaoChange(idx, e.target.value)}
+                        onChange={(e) =>
+                          handleFuncaoChange(idx, e.target.value)
+                        }
                         className={`font-semibold pl-4 pr-10 py-2 rounded-lg shadow-sm appearance-none
-                          ${m.funcao === "Proprietário" ? "bg-red-700 text-white" : "bg-gray-600 text-white"}
+                          ${
+                            m.funcao === "Proprietário"
+                              ? "bg-red-700 text-white"
+                              : "bg-gray-600 text-white"
+                          }
                           text-center`}
-                        style={{ minWidth: 160, appearance: "none", WebkitAppearance: "none", MozAppearance: "none" }}
+                        style={{
+                          minWidth: 160,
+                          appearance: "none",
+                          WebkitAppearance: "none",
+                          MozAppearance: "none",
+                        }}
                       >
                         {funcoes.map((f) => (
                           <option key={f} value={f} className="text-center">
@@ -152,8 +184,19 @@ const Administracao: React.FC = () => {
                       </select>
                       {/* Seta ao lado do texto, com pequeno padding */}
                       <span className="pointer-events-none absolute right-8 top-1/2 -translate-y-1/2 flex items-center">
-                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
-                          <path d="M7 10l5 5 5-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <svg
+                          width="18"
+                          height="18"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M7 10l5 5 5-5"
+                            stroke="white"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
                         </svg>
                       </span>
                     </div>
@@ -162,7 +205,9 @@ const Administracao: React.FC = () => {
                     <input
                       type="date"
                       value={m.expiracao}
-                      onChange={(e) => handleExpiracaoChange(idx, e.target.value)}
+                      onChange={(e) =>
+                        handleExpiracaoChange(idx, e.target.value)
+                      }
                       className="border px-3 py-2 rounded-lg shadow-sm"
                     />
                   </td>
@@ -178,7 +223,10 @@ const Administracao: React.FC = () => {
         </div>
       </main>
       {/* Material Icons CDN */}
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
+      <link
+        href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        rel="stylesheet"
+      ></link>
     </div>
   );
 };

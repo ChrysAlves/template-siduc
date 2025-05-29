@@ -32,6 +32,7 @@ function App() {
 
             <Route path="/administracao" element={<Administracao />} />
 
+
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

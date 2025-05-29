@@ -12,6 +12,7 @@ const options = [
   { label: "Relatório", value: "Relatório" },
   { label: "Administração", value: "Administração" },
   { label: "Gerenciador SISDUC", value: "Gerenciador" },
+  { label: "Formulário", value: "Formulario" },
 ];
 
 const EscolhaOverlay: React.FC<EscolhaOverlayProps> = ({
@@ -22,6 +23,24 @@ const EscolhaOverlay: React.FC<EscolhaOverlayProps> = ({
   const navigate = useNavigate();
 
   if (!open) return null;
+
+  const handleEscolhaSelect = (option: string) => {
+    if (option === "Formulario") {
+      onSelect(option); // Chama o handler do Index para abrir o formulário
+    } else if (option === "Pesquisas") {
+      onClose();
+      navigate("/");
+    } else if (option === "Relatório") {
+      onClose();
+      navigate("/relatorio");
+    } else if (option === "Gerenciador") {
+      onClose();
+      navigate("/gerenciador");
+    } else if (option === "Administração") {
+      onClose();
+      navigate("/administracao");
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/30 backdrop-blur">
@@ -47,26 +66,7 @@ const EscolhaOverlay: React.FC<EscolhaOverlayProps> = ({
           {options.map((opt) => (
             <button
               key={opt.value}
-              onClick={() => {
-                onSelect(opt.value);
-                onClose();
-                if (opt.value === "Pesquisas") {
-                  navigate("/");
-                }
-                if (opt.value === "Relatório") {
-                  navigate("/relatorio");
-                }
-
-                if (opt.value === "Gerenciador") {
-                  navigate("/gerenciador");
-                }
-                // ...outras opções...
-
-                if (opt.value === "Administração") {
-                  navigate("/administracao"); // Defina a rota desejada aqui
-                }
-
-              }}
+              onClick={() => handleEscolhaSelect(opt.value)}
               className="w-full bg-red-700 text-white font-semibold py-3 rounded-lg hover:bg-red-800 transition"
             >
               {opt.label}
