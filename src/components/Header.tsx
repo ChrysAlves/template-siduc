@@ -69,8 +69,8 @@ const Header = () => {
           <img
             src="/public/logosisduc.png"
             alt="SISDUC"
-            className="h-10 w-auto"
-            style={{ maxHeight: 40 }}
+            className="h-12 w-auto"
+            style={{ maxHeight: 50 }}
           />
           <div className="flex items-center gap-4">
             <NavigationMenu>
@@ -92,11 +92,23 @@ const Header = () => {
                         className={cn(
                           "px-4 py-2 hover:text-red-700 transition-colors"
                         )}
-                        href="/gerenciador"
+                        href="/mapoteca"
                       >
-                        Gerenciador
+                        Mapoteca
                       </NavigationMenuLink>
                     </NavigationMenuItem>
+
+                    <NavigationMenuItem>
+                      <NavigationMenuLink
+                        className={cn(
+                          "px-4 py-2 hover:text-red-700 transition-colors"
+                        )}
+                        href="/inicialAdm"
+                      >
+                        inicial Adm
+                      </NavigationMenuLink>
+                    </NavigationMenuItem>
+
                     <NavigationMenuItem>
                       <NavigationMenuLink
                         className={cn(

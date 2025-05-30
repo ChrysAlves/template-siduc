@@ -8,10 +8,11 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Relatorio from "./pages/Relatorio";
 
-import Gerenciador from "./pages/Gerenciador";
+import Mapoteca from "./pages/Mapoteca";
 
 import Administracao from "./pages/Administracao";
-
+import InicialAdm from "./pages/inicialAdm";
+;
 
 // Criando o queryClient fora do componente para evitar recriações
 const queryClient = new QueryClient();
@@ -28,9 +29,11 @@ function App() {
             <Route path="/" element={<Index />} />
             <Route path="/relatorio" element={<Relatorio />} />
 
-            <Route path="/gerenciador" element={<Gerenciador />} />
+            <Route path="/mapoteca" element={<Mapoteca />} />
 
             <Route path="/administracao" element={<Administracao />} />
+
+            <Route path="/inicialAdm" element={<InicialAdm />} />
 
 
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

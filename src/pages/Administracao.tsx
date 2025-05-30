@@ -61,6 +61,7 @@ const funcoes = [
 const Administracao: React.FC = () => {
   const [membros, setMembros] = useState(membrosExemplo);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showMenu, setShowMenu] = useState<number | null>(null);
   const notifRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -76,6 +77,17 @@ const Administracao: React.FC = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showNotifications]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (showMenu !== null) {
+        setShowMenu(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showMenu]);
 
   const handleFuncaoChange = (index: number, novaFuncao: string) => {
     const novosMembros = [...membros];
@@ -94,19 +106,12 @@ const Administracao: React.FC = () => {
       <Header />
       <main className="container mx-auto mt-28 px-4 py-4">
         <div className="flex items-center gap-4 mb-6">
-          <button className="bg-gray-200 px-3 py-2 rounded-lg flex items-center gap-2 text-gray-700 shadow-sm">
-            <span className="material-icons">settings</span>
-            Filtrar membros
-          </button>
+
           <input
             type="text"
             placeholder="Pesquisar membros"
-            className="border px-3 py-2 rounded-lg w-64 shadow-sm"
+            className="border px-3 py-2 rounded-lg w-full shadow-sm"
           />
-          <select className="border px-3 py-2 rounded-lg shadow-sm">
-            <option>Conta</option>
-            {/* Adicione mais opções se necessário */}
-          </select>
         </div>
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
           <table className="min-w-full">
@@ -163,10 +168,9 @@ const Administracao: React.FC = () => {
                           handleFuncaoChange(idx, e.target.value)
                         }
                         className={`font-semibold pl-4 pr-10 py-2 rounded-lg shadow-sm appearance-none
-                          ${
-                            m.funcao === "Proprietário"
-                              ? "bg-red-700 text-white"
-                              : "bg-gray-600 text-white"
+                          ${m.funcao === "Proprietário"
+                            ? "bg-red-700 text-white"
+                            : "bg-gray-600 text-white"
                           }
                           text-center`}
                         style={{
@@ -211,10 +215,26 @@ const Administracao: React.FC = () => {
                       className="border px-3 py-2 rounded-lg shadow-sm"
                     />
                   </td>
-                  <td className="py-4 px-4 text-right">
-                    <button className="text-gray-400 hover:text-gray-700 rounded-full p-2 transition">
+                  <td className="py-4 px-4 text-right relative">
+                    <button
+                      className="text-gray-400 hover:text-gray-700 rounded-full p-2 transition"
+                      onClick={() => setShowMenu(showMenu === idx ? null : idx)}
+                    >
                       <span className="material-icons">more_vert</span>
                     </button>
+                    {showMenu === idx && (
+                      <div
+                        className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg"
+                        onClick={(e) => e.stopPropagation()} // Evita que o clique dentro do menu feche-o
+                      >
+                        <button
+                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                          onClick={() => alert("Excluir usuário clicado!")}
+                        >
+                          Excluir usuário
+                        </button>
+                      </div>
+                    )}
                   </td>
                 </tr>
               ))}

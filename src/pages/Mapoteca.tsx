@@ -124,7 +124,7 @@ const allDocuments = [
     },
 ];
 
-const Gerenciador = () => {
+const Mapoteca = () => {
     const [filteredDocs, setFilteredDocs] = useState<typeof allDocuments>([]);
     const [applied, setApplied] = useState(false);
 
@@ -193,11 +193,11 @@ const Gerenciador = () => {
                 )}
                 <div className="container mx-auto px-4 py-8">
                     <div className="mb-8">
-                        <h1 className="text-2xl font-bold text-sisduc-red mb-2">
-                            Gerenciador - Sistema de Documentação Urbanística e Cartográfica
+                        <h1 className="text-5xl font-bold text-sisduc-red mb-2">
+                            Mapoteca
                         </h1>
                         <p className="text-gray-600">
-                            Gerencie seus arquivos cartográficos, projetos urbanísticos e documentos de infraestrutura
+                          Gerenciador de Documentos
                         </p>
                     </div>
 
@@ -209,4 +209,4 @@ const Gerenciador = () => {
     );
 };
 
-export default Gerenciador;
+export default Mapoteca;

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Download, Eye, ChevronUp, ChevronDown } from "lucide-react";
+import { Download, Eye, ChevronUp, ChevronDown, Settings } from "lucide-react";
 
 interface SubDocument {
   id: number;
@@ -13,11 +13,11 @@ interface Document {
   id: number;
   number: string;
   status:
-    | "aprovado"
-    | "aprovado_registrado"
-    | "aprovado_aguardando"
-    | "anulado"
-    | "nao_registrado";
+  | "aprovado"
+  | "aprovado_registrado"
+  | "aprovado_aguardando"
+  | "anulado"
+  | "nao_registrado";
   sei: string;
   dataCartorio: string;
   ra: string;
@@ -70,51 +70,36 @@ const DocumentCard = ({
   document,
   expanded,
   onExpand,
+  isInicialAdm, // Propriedade para verificar se está na página InicialAdm
 }: {
   document: Document;
   expanded: boolean;
   onExpand: () => void;
+  isInicialAdm?: boolean; // Propriedade opcional
 }) => {
   const { urb, middle, suffix } = parseNumber(document.number);
 
-  // Exemplo de anexos fictícios para cada documento
+  // Exemplo de arquivos relacionados ao documento
   const files = [
-    { name: `${document.number}-anexo1`, label: "Matriz de Localização", icon: <Download className="w-4 h-4" /> },
-    { name: `${document.number}-anexo2`, label: "Planta de Situação", icon: <Download className="w-4 h-4" /> },
-    { name: `${document.number}-anexo3`, label: "Memorial Descritivo", icon: <Download className="w-4 h-4" /> },
+    { name: `${document.number}-anexo1`, label: "URB 001/2024" },
+    { name: `${document.number}-anexo2`, label: "MDE 001/2024" },
+    { name: `${document.number}-anexo3`, label: "PSG 001/2024" },
   ];
 
-  // Função para baixar um arquivo individual
   const handleDownload = (fileName: string) => {
     const url = `/arquivos/${fileName}.pdf`;
-
-    // Verifica se o ambiente é o navegador
-    if (typeof window !== "undefined" && typeof document !== "undefined") {
-      try {
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = fileName;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } catch (error) {
-        console.error("Erro ao tentar baixar o arquivo:", error);
-      }
-    } else {
-      console.error("Ambiente não suporta downloads.");
-    }
-  };
-
-  // Função para baixar todos os arquivos
-  const handleDownloadAll = () => {
-    files.forEach((file) => handleDownload(file.name));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
     <Card
-      className={`shadow-md hover:shadow-lg transition-shadow cursor-pointer select-none ${
-        expanded ? "py-4" : "py-1"
-      }`}
+      className={`shadow-md hover:shadow-lg transition-shadow cursor-pointer select-none ${expanded ? "py-4" : "py-1"
+        }`}
       onClick={onExpand}
     >
       <CardHeader className={`pb-2 pt-2 ${expanded ? "" : "py-1"}`}>
@@ -131,86 +116,100 @@ const DocumentCard = ({
             )}
           </span>
           <span
-            className={`text-base px-3 py-1 rounded font-bold ${
-              statusColors[document.status]
-            }`}
+            className={`text-base px-3 py-1 rounded font-bold ${statusColors[document.status]
+              }`}
           >
             {statusLabels[document.status]}
           </span>
         </div>
+        {/* Botão de engrenagem no canto direito, visível apenas se expandido e na página InicialAdm */}
+        {expanded && isInicialAdm && (
+          <div className="absolute top-2 right-2">
+            <button
+              type="button"
+              className="text-gray-700 hover:text-gray-900 transition"
+              onClick={(e) => {
+                e.stopPropagation();
+                console.log("Engrenagem clicada para o documento:", document.id);
+              }}
+              title="Configurações"
+            >
+              <Settings className="w-5 h-5" />
+            </button>
+          </div>
+        )}
       </CardHeader>
       <CardContent className={expanded ? "pt-6 pb-4" : "py-0"}>
         {expanded && (
-          <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
-            {/* Esquerda: RA e Processo de alteração */}
-            <div>
-              <p>
-                <span className="font-semibold">RA:</span> {document.ra}
-              </p>
-              <p>
-                <span className="font-semibold">Processo de alteração:</span>{" "}
-                {document.processoAlteracao || "N/A"}
-              </p>
-              {(document.status === "aprovado" ||
-                document.status === "aprovado_registrado" ||
-                document.status === "aprovado_aguardando") && (
-                <p>
-                  <span className="font-semibold">
-                    Legislação de aprovação:
-                  </span>{" "}
-                  Portaria nº 123/2024
-                </p>
-              )}
-            </div>
-            {/* Direita: Processo SEI e Data registro (condicional) */}
-            <div className="text-right min-w-[180px]">
-              <p>
-                <span className="font-semibold">Processo SEI:</span>{" "}
-                {document.sei}
-              </p>
-              {document.status === "aprovado_registrado" && (
-                <p>
-                  <span className="font-semibold">
-                    Data registro em cartório:
-                  </span>{" "}
-                  {document.dataCartorio}
-                </p>
-              )}
-            </div>
-          </div>
-        )}
-        {expanded && (
-          <div className="mt-8">
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 shadow-inner">
-              <div className="font-semibold text-slate-700 mb-2 flex items-center gap-2">
-                <Download className="w-5 h-5 text-red-700" />
-                Anexos disponíveis
-              </div>
-              <button
-                type="button"
-                className="mb-4 flex items-center gap-2 bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded transition text-sm font-semibold shadow"
-                onClick={e => {
-                  e.stopPropagation();
-                  handleDownloadAll();
-                }}
-              >
-                <Download className="w-4 h-4" />
-                Baixar todos os anexos
-              </button>
-              <div className="flex flex-wrap gap-3">
-                {files.map((file, idx) => (
+          <div>
+            <p>
+              <strong>SEI:</strong> {document.sei}
+            </p>
+            <p>
+              <strong>RA:</strong> {document.ra}
+            </p>
+            <p>
+              <strong>Processo de Alteração:</strong>{" "}
+              {document.processoAlteracao || "N/A"}
+            </p>
+            <p>
+              <strong>Data de Registro:</strong> {document.dataCartorio}
+            </p>
+            {/* Aba de arquivos */}
+            <div className="mt-4 relative">
+              <div className="flex justify-between items-center mb-2">
+                <h4 className="font-semibold text-gray-700">Arquivos</h4>
+
+                {/* Botão de engrenagem para edição, visível apenas na página InicialAdm */}
+                {isInicialAdm && (
                   <button
-                    key={file.name}
                     type="button"
-                    className="flex items-center gap-2 bg-white border border-slate-300 hover:bg-red-50 text-slate-800 px-3 py-2 rounded shadow-sm transition text-sm font-medium"
-                    onClick={e => {
+                    className="text-gray-700 hover:text-gray-900 transition absolute -top-6 right-0"
+                    onClick={(e) => {
                       e.stopPropagation();
-                      handleDownload(file.name);
+                      console.log("Engrenagem de edição clicada para o documento:", document.id);
                     }}
+                    title="Editar documento"
                   >
-                    {file.icon}
-                    {file.label}
+                    <Settings className="w-5 h-5" />
                   </button>
+                )}
+              </div>
+
+              <div className="flex flex-col gap-2">
+                {files.map((file) => (
+                  <div
+                    key={file.name}
+                    className="flex items-center justify-between bg-gray-100 px-3 py-2 rounded"
+                  >
+                    <span className="text-gray-800">{file.label}</span>
+                    <div className="flex items-center gap-2">
+                      {/* Botão de download */}
+                      <button
+                        type="button"
+                        className="hover:text-red-600 flex items-center gap-1"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDownload(file.name);
+                        }}
+                        title="Baixar arquivo"
+                      >
+                        <Download className="w-5 h-5" />
+                      </button>
+                      {/* Botão de visualizar */}
+                      <button
+                        type="button"
+                        className="hover:text-red-600 flex items-center gap-1"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          window.open(`/arquivos/${file.name}.pdf`, "_blank");
+                        }}
+                        title="Visualizar arquivo"
+                      >
+                        <Eye className="w-5 h-5" />
+                      </button>
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -221,7 +220,11 @@ const DocumentCard = ({
   );
 };
 
-const DocumentCards = () => {
+interface DocumentCardsProps {
+  isInicialAdm?: boolean;
+}
+
+const DocumentCards: React.FC<DocumentCardsProps> = ({ isInicialAdm }) => {
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
   // Exemplo de documentos com os novos status:
@@ -317,6 +320,7 @@ const DocumentCards = () => {
           document={doc}
           expanded={expandedId === doc.id}
           onExpand={() => setExpandedId(expandedId === doc.id ? null : doc.id)}
+          isInicialAdm={isInicialAdm} // Use o valor recebido da propriedade
         />
       ))}
     </div>

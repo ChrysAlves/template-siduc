@@ -8,11 +8,11 @@ interface EscolhaOverlayProps {
 }
 
 const options = [
-  { label: "Pesquisas", value: "Pesquisas" },
-  { label: "Relatório", value: "Relatório" },
-  { label: "Administração", value: "Administração" },
-  { label: "Gerenciador SISDUC", value: "Gerenciador" },
-  { label: "Formulário", value: "Formulario" },
+  { label: "Pesquisas", value: "Pesquisas", description: "Pesquisar por campos específicos ou realizar pesquisa avançada", icon: "🔍", bgColor: "bg-red-500" },
+  { label: "Relatórios", value: "Relatório", description: "Gerar e imprimir relatórios", icon: "📄", bgColor: "bg-red-600" },
+  { label: "Administração", value: "Administração", description: "Configurar o sistema", icon: "🛠️", bgColor: "bg-red-700" },
+  { label: "Mapoteca", value: "Mapoteca", description: "Gerenciar Mapoteca", icon: "📂", bgColor: "bg-red-800" },
+  { label: "Formulário", value: "Formulario", description: "Preencher formulários", icon: "📝", bgColor: "bg-red-900" },
 ];
 
 const EscolhaOverlay: React.FC<EscolhaOverlayProps> = ({
@@ -26,17 +26,17 @@ const EscolhaOverlay: React.FC<EscolhaOverlayProps> = ({
 
   const handleEscolhaSelect = (option: string) => {
     if (option === "Formulario") {
-      onSelect(option); // Chama o handler do Index para abrir o formulário
+      onSelect(option);
     } else if (option === "Pesquisas") {
       onClose();
       navigate("/");
     } else if (option === "Relatório") {
       onClose();
       navigate("/relatorio");
-    } else if (option === "Gerenciador") {
+    } else if (option === "Mapoteca") {
       onClose();
-      navigate("/gerenciador");
-    } else if (option === "Administração") {
+      navigate("/mapoteca");
+    } else if (option === "Mapoteca") {
       onClose();
       navigate("/administracao");
     }
@@ -44,7 +44,7 @@ const EscolhaOverlay: React.FC<EscolhaOverlayProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/30 backdrop-blur">
-      <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-lg relative flex flex-col items-center">
+      <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-4xl relative flex flex-col items-center">
         <button
           className="absolute top-4 right-4 text-gray-400 hover:text-red-700 text-2xl"
           onClick={onClose}
@@ -62,14 +62,18 @@ const EscolhaOverlay: React.FC<EscolhaOverlayProps> = ({
         <h2 className="text-2xl font-bold mb-6 text-center text-red-700">
           Escolha uma opção
         </h2>
-        <div className="w-full flex flex-col gap-4">
+        <div className="w-full grid grid-cols-3 gap-4">
           {options.map((opt) => (
             <button
               key={opt.value}
               onClick={() => handleEscolhaSelect(opt.value)}
-              className="w-full bg-red-700 text-white font-semibold py-3 rounded-lg hover:bg-red-800 transition"
+              className={`flex flex-col justify-between items-start p-4  text-white font-semibold hover:opacity-90 transition ${opt.bgColor}`}
             >
-              {opt.label}
+              <div className="text-4xl">{opt.icon}</div>
+              <div>
+                <div className="text-lg font-bold">{opt.label}</div>
+                <div className="text-sm mt-1">{opt.description}</div>
+              </div>
             </button>
           ))}
         </div>
