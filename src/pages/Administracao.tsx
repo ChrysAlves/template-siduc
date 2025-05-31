@@ -103,7 +103,6 @@ const Administracao: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <Header />
       <main className="container mx-auto mt-28 px-4 py-4">
         <div className="flex items-center gap-4 mb-6">
 

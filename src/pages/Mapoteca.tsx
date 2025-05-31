@@ -167,7 +167,6 @@ const Mapoteca = () => {
 
     return (
         <div className="min-h-screen bg-slate-50">
-            <Header />
 
             <main className="container mx-auto px-4 py-8">
 

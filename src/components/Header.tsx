@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 
-const Header = () => {
+const Header = ({ onOpenReportModal }) => {
   const [showLogin, setShowLogin] = useState(false); // Controle do LoginOverlay
   const [showEscolha, setShowEscolha] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false); // Controle do botão de notificações
@@ -114,7 +114,11 @@ const Header = () => {
                         className={cn(
                           "px-4 py-2 hover:text-red-700 transition-colors"
                         )}
-                        href="/relatorio"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          onOpenReportModal();
+                        }}
+                        href="#"
                       >
                         Relatório
                       </NavigationMenuLink>
@@ -206,6 +210,7 @@ const Header = () => {
         open={showEscolha}
         onClose={() => setShowEscolha(false)}
         onSelect={handleEscolhaSelect}
+        onOpenReportModal={onOpenReportModal}
       />
       <link
         href="https://fonts.googleapis.com/icon?family=Material+Icons"

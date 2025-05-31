@@ -69,7 +69,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <Header />
 
       <main className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8 text-red-800">
@@ -187,6 +186,7 @@ const Index = () => {
         open={showEscolha}
         onClose={() => setShowEscolha(false)}
         onSelect={handleEscolhaSelect}
+        onOpenReportModal={() => { /* Implementar lógica ou deixar vazio se não necessário */ }}
       />
     </div>
   );
