@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import Header from "@/components/Header";
+import { Listbox } from "@headlessui/react";
 
 const membrosExemplo = [
   {
@@ -58,10 +59,44 @@ const funcoes = [
   "Mantenedor",
 ];
 
+const membrosMapoteca = [
+  {
+    nome: "João Paulo Silva Porto",
+    usuario: "@joaopaulo",
+    origem: "Herdado de SEDUH",
+    funcao: "Com acesso",
+    expiracao: "",
+    cor: "bg-red-700",
+    iniciais: "JP",
+  },
+  {
+    nome: "Maria Clara Souza",
+    usuario: "@mariaclara",
+    origem: "Membro direto por Alexandre Cotins",
+    funcao: "Sem acesso",
+    expiracao: "",
+    cor: "bg-gray-500",
+    iniciais: "MC",
+  },
+  {
+    nome: "Lucas Fernandes",
+    usuario: "@lucasf",
+    origem: "Herdado de SEDUH",
+    funcao: "Com acesso",
+    expiracao: "",
+    cor: "bg-red-700",
+    iniciais: "LF",
+  },
+];
+
+const funcoesMapoteca = ["Sem acesso", "Com acesso"];
+
 const Administracao: React.FC = () => {
   const [membros, setMembros] = useState(membrosExemplo);
+  const [membrosMap, setMembrosMap] = useState(membrosMapoteca);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showMenu, setShowMenu] = useState<number | null>(null);
+  const [abaAtiva, setAbaAtiva] = useState<"geral" | "mapoteca">("geral"); // <-- NOVO
   const notifRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -101,144 +136,316 @@ const Administracao: React.FC = () => {
     setMembros(novosMembros);
   };
 
+  const handleFuncaoMapotecaChange = (index: number, novaFuncao: string) => {
+    const novosMembros = [...membrosMap];
+    novosMembros[index].funcao = novaFuncao;
+    setMembrosMap(novosMembros);
+  };
+
   return (
     <div className="min-h-screen bg-slate-50">
       <main className="container mx-auto mt-28 px-4 py-4">
         <div className="flex items-center gap-4 mb-6">
-
           <input
             type="text"
             placeholder="Pesquisar membros"
             className="border px-3 py-2 rounded-lg w-full shadow-sm"
           />
         </div>
+
+        {/* Abas de controle de acesso */}
+        <div className="flex mb-4">
+          <button
+            className={`flex-1 py-2 rounded-t-lg font-semibold transition ${
+              abaAtiva === "geral"
+                ? "bg-white text-black shadow border border-b-0"
+                : "bg-gray-100 text-gray-500"
+            }`}
+            onClick={() => setAbaAtiva("geral")}
+          >
+            Controle de Acesso Geral
+          </button>
+          <button
+            className={`flex-1 py-2 rounded-t-lg font-semibold transition ${
+              abaAtiva === "mapoteca"
+                ? "bg-white text-black shadow border border-b-0"
+                : "bg-gray-100 text-gray-500"
+            }`}
+            onClick={() => setAbaAtiva("mapoteca")}
+          >
+            Controle de Acesso Mapoteca
+          </button>
+        </div>
+
+        {/* Conteúdo das abas */}
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-          <table className="min-w-full">
-            <thead>
-              <tr className="border-b bg-gray-50">
-                <th className="py-4 px-4 text-left font-semibold">Conta</th>
-                <th className="py-4 px-4 text-left font-semibold">Origem</th>
-                <th className="py-4 px-4 text-left font-semibold">Função</th>
-                <th className="py-4 px-4 text-left font-semibold">Expiração</th>
-                <th className="py-4 px-4"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {membros.map((m, idx) => (
-                <tr
-                  key={idx}
-                  className="border-b last:border-b-0 hover:bg-gray-50 transition"
-                >
-                  <td className="py-4 px-4 flex items-center gap-3">
-                    <span
-                      className={`w-10 h-10 flex items-center justify-center rounded-full text-white font-bold text-base ${m.cor}`}
-                    >
-                      {m.iniciais}
-                    </span>
-                    <div>
-                      <div className="font-semibold">{m.nome}</div>
-                      <div className="text-xs text-gray-500">{m.usuario}</div>
-                    </div>
-                  </td>
-                  <td className="py-4 px-4 text-sm leading-tight">
-                    {m.origem.startsWith("Membro direto por") ? (
-                      <>
-                        <div className="text-gray-700">Membro direto por</div>
-                        <div className="text-red-700">
-                          {m.origem.replace("Membro direto por ", "")}
-                        </div>
-                      </>
-                    ) : m.origem.startsWith("Herdado de") ? (
-                      <>
-                        <div className="text-gray-700">Herdado de</div>
-                        <div className="text-red-700">
-                          {m.origem.replace("Herdado de ", "")}
-                        </div>
-                      </>
-                    ) : (
-                      <div className="text-gray-700">{m.origem}</div>
-                    )}
-                  </td>
-                  <td className="py-4 px-4">
-                    <div className="relative flex items-center justify-center">
-                      <select
-                        value={m.funcao}
-                        onChange={(e) =>
-                          handleFuncaoChange(idx, e.target.value)
-                        }
-                        className={`font-semibold pl-4 pr-10 py-2 rounded-lg shadow-sm appearance-none
-                          ${m.funcao === "Proprietário"
-                            ? "bg-red-700 text-white"
-                            : "bg-gray-600 text-white"
-                          }
-                          text-center`}
-                        style={{
-                          minWidth: 160,
-                          appearance: "none",
-                          WebkitAppearance: "none",
-                          MozAppearance: "none",
-                        }}
-                      >
-                        {funcoes.map((f) => (
-                          <option key={f} value={f} className="text-center">
-                            {f}
-                          </option>
-                        ))}
-                      </select>
-                      {/* Seta ao lado do texto, com pequeno padding */}
-                      <span className="pointer-events-none absolute right-8 top-1/2 -translate-y-1/2 flex items-center">
-                        <svg
-                          width="18"
-                          height="18"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            d="M7 10l5 5 5-5"
-                            stroke="white"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </span>
-                    </div>
-                  </td>
-                  <td className="py-4 px-4">
-                    <input
-                      type="date"
-                      value={m.expiracao}
-                      onChange={(e) =>
-                        handleExpiracaoChange(idx, e.target.value)
-                      }
-                      className="border px-3 py-2 rounded-lg shadow-sm"
-                    />
-                  </td>
-                  <td className="py-4 px-4 text-right relative">
-                    <button
-                      className="text-gray-400 hover:text-gray-700 rounded-full p-2 transition"
-                      onClick={() => setShowMenu(showMenu === idx ? null : idx)}
-                    >
-                      <span className="material-icons">more_vert</span>
-                    </button>
-                    {showMenu === idx && (
-                      <div
-                        className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg"
-                        onClick={(e) => e.stopPropagation()} // Evita que o clique dentro do menu feche-o
-                      >
-                        <button
-                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                          onClick={() => alert("Excluir usuário clicado!")}
-                        >
-                          Excluir usuário
-                        </button>
-                      </div>
-                    )}
-                  </td>
+          {abaAtiva === "geral" ? (
+            // Tabela de Controle de Acesso Geral
+            <table className="min-w-full">
+              <thead>
+                <tr className="border-b bg-gray-50">
+                  <th className="py-4 px-4 text-left font-semibold">Conta</th>
+                  <th className="py-4 px-4 text-left font-semibold">Origem</th>
+                  <th className="py-4 pr-4  font-semibold">Função</th>
+                  <th className="py-4 pr-16  font-semibold">Expiração</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {membros.map((m, idx) => (
+                  <tr
+                    key={idx}
+                    className="border-b last:border-b-0 hover:bg-gray-50 transition"
+                  >
+                    <td className="py-4 px-4 flex items-center gap-3">
+                      <span
+                        className={`w-10 h-10 flex items-center justify-center rounded-full text-white font-bold text-base ${m.cor}`}
+                      >
+                        {m.iniciais}
+                      </span>
+                      <div>
+                        <div className="font-semibold">{m.nome}</div>
+                        <div className="text-xs text-gray-500">{m.usuario}</div>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-sm leading-tight">
+                      {m.origem.startsWith("Membro direto por") ? (
+                        <>
+                          <div className="text-gray-700">Membro direto por</div>
+                          <div className="text-red-700">
+                            {m.origem.replace("Membro direto por ", "")}
+                          </div>
+                        </>
+                      ) : m.origem.startsWith("Herdado de") ? (
+                        <>
+                          <div className="text-gray-700">Herdado de</div>
+                          <div className="text-red-700">
+                            {m.origem.replace("Herdado de ", "")}
+                          </div>
+                        </>
+                      ) : (
+                        <div className="text-gray-700">{m.origem}</div>
+                      )}
+                    </td>
+                    <td className="py-4 px-4">
+                      <div className="relative flex items-center justify-center">
+                        <Listbox
+                          value={m.funcao}
+                          onChange={(valor) => handleFuncaoChange(idx, valor)}
+                        >
+                          <div className="relative w-48 mx-auto">
+                            <Listbox.Button className="w-full rounded-xl bg-gray-800 text-white font-semibold py-2 px-4 shadow-xl ring-2 ring-red-400 focus:ring-4 flex justify-between items-center">
+                              {m.funcao}
+                              <svg
+                                width="18"
+                                height="18"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  d="M7 10l5 5 5-5"
+                                  stroke="white"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                            </Listbox.Button>
+                            <Listbox.Options className="absolute mt-2 left-1/2 -translate-x-1/2 w-44 max-h-48 overflow-y-auto bg-gray-900 rounded-xl shadow-2xl py-1 z-10 flex flex-col gap-1 px-1">
+                              {funcoes.map((f) => (
+                                <Listbox.Option
+                                  key={f}
+                                  value={f}
+                                  className={({ active, selected }) =>
+                                    `cursor-pointer text-center py-2 px-2 rounded-lg text-white text-base font-medium transition-all
+                                    ${
+                                      active
+                                        ? "bg-red-500 scale-100"
+                                        : "bg-gray-800"
+                                    }
+                                    ${selected ? "ring-2 ring-red-400" : ""}`
+                                  }
+                                >
+                                  {f}
+                                </Listbox.Option>
+                              ))}
+                            </Listbox.Options>
+                          </div>
+                        </Listbox>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4">
+                      <input
+                        type="date"
+                        value={m.expiracao}
+                        onChange={(e) =>
+                          handleExpiracaoChange(idx, e.target.value)
+                        }
+                        className="border px-3 py-2 rounded-lg shadow-sm"
+                      />
+                    </td>
+                    <td className="py-4 px-4 text-right relative">
+                      <button
+                        className="text-gray-400 hover:text-gray-700 rounded-full p-2 transition"
+                        onClick={() =>
+                          setShowMenu(showMenu === idx ? null : idx)
+                        }
+                      >
+                        <span className="material-icons">more_vert</span>
+                      </button>
+                      {showMenu === idx && (
+                        <div
+                          className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg"
+                          onClick={(e) => e.stopPropagation()} // Evita que o clique dentro do menu feche-o
+                        >
+                          <button
+                            className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                            onClick={() => alert("Excluir usuário clicado!")}
+                          >
+                            Excluir usuário
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            // Tabela de controle de acesso Mapoteca
+            <table className="min-w-full">
+              <thead>
+                <tr className="border-b bg-gray-50">
+                  <th className="py-4 px-4 text-left font-semibold">Conta</th>
+                  <th className="py-4 px-4 text-left font-semibold">Origem</th>
+                  <th className="py-4 pr-4  font-semibold">Função</th>
+                  <th className="py-4 pr-36 font-semibold">Expiração</th>
+                </tr>
+              </thead>
+              <tbody>
+                {membrosMap.map((m, idx) => (
+                  <tr
+                    key={idx}
+                    className="border-b last:border-b-0 hover:bg-gray-50 transition"
+                  >
+                    <td className="py-4 px-4 flex items-center gap-3">
+                      <span
+                        className={`w-10 h-10 flex items-center justify-center rounded-full text-white font-bold text-base ${m.cor}`}
+                      >
+                        {m.iniciais}
+                      </span>
+                      <div>
+                        <div className="font-semibold">{m.nome}</div>
+                        <div className="text-xs text-gray-500">{m.usuario}</div>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-sm leading-tight">
+                      {m.origem.startsWith("Membro direto por") ? (
+                        <>
+                          <div className="text-gray-700">Membro direto por</div>
+                          <div className="text-red-700">
+                            {m.origem.replace("Membro direto por ", "")}
+                          </div>
+                        </>
+                      ) : m.origem.startsWith("Herdado de") ? (
+                        <>
+                          <div className="text-gray-700">Herdado de</div>
+                          <div className="text-red-700">
+                            {m.origem.replace("Herdado de ", "")}
+                          </div>
+                        </>
+                      ) : (
+                        <div className="text-gray-700">{m.origem}</div>
+                      )}
+                    </td>
+                    <td className="py-4 px-4">
+                      <div className="relative flex items-center justify-center">
+                        <Listbox
+                          value={m.funcao}
+                          onChange={(valor) => handleFuncaoMapotecaChange(idx, valor)}
+                        >
+                          <div className="relative w-48 mx-auto">
+                            <Listbox.Button className="w-full rounded-xl bg-gray-800 text-white font-semibold py-2 px-4 shadow-xl ring-2 ring-red-400 focus:ring-4 flex justify-between items-center">
+                              {m.funcao}
+                              <svg
+                                width="18"
+                                height="18"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  d="M7 10l5 5 5-5"
+                                  stroke="white"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                            </Listbox.Button>
+                            <Listbox.Options className="absolute mt-2 left-1/2 -translate-x-1/2 w-44 max-h-48 overflow-y-auto bg-gray-900 rounded-xl shadow-2xl py-1 z-10 flex flex-col gap-1 px-1">
+                              {funcoesMapoteca.map((f) => (
+                                <Listbox.Option
+                                  key={f}
+                                  value={f}
+                                  className={({ active, selected }) =>
+                                    `cursor-pointer text-center py-2 px-2 rounded-lg text-white text-base font-medium transition-all
+                                    ${
+                                      active
+                                        ? "bg-red-500 scale-100"
+                                        : "bg-gray-800"
+                                    }
+                                    ${selected ? "ring-2 ring-red-400" : ""}`
+                                  }
+                                >
+                                  {f}
+                                </Listbox.Option>
+                              ))}
+                            </Listbox.Options>
+                          </div>
+                        </Listbox>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4">
+                      <input
+                        type="date"
+                        value={m.expiracao}
+                        onChange={(e) => {
+                          const novosMembros = [...membrosMap];
+                          novosMembros[idx].expiracao = e.target.value;
+                          setMembrosMap(novosMembros);
+                        }}
+                        className="border px-3 py-2 rounded-lg shadow-sm"
+                      />
+                    </td>
+                    <td className="py-4 px-4 text-right relative">
+                      <button
+                        className="text-gray-400 hover:text-gray-700 rounded-full p-2 transition"
+                        onClick={() =>
+                          setShowMenu(
+                            showMenu === idx + 1000 ? null : idx + 1000
+                          )
+                        }
+                      >
+                        <span className="material-icons">more_vert</span>
+                      </button>
+                      {showMenu === idx + 1000 && (
+                        <div
+                          className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <button
+                            className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                            onClick={() => alert("Excluir usuário clicado!")}
+                          >
+                            Excluir usuário
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </main>
       {/* Material Icons CDN */}
