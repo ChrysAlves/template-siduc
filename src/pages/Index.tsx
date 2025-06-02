@@ -6,7 +6,7 @@ import DocumentCards from "@/components/DocumentCards";
 import SideFilters from "@/components/SideFilters";
 import SearchOverlay from "@/components/SearchOverlay";
 import EscolhaOverlay from "@/components/EscolhaOverlay";
-
+import ViewerSidebar from "@/components/ViewerSidebar"; // ADICIONE ESTA LINHA
 
 const tiposDocumento = [
   "Relatório",
@@ -16,12 +16,16 @@ const tiposDocumento = [
   "Outro",
 ];
 
-
 const Index = () => {
   const [showSearchOverlay, setShowSearchOverlay] = useState(true);
   const [showEscolha, setShowEscolha] = useState(false);
   const [showFormulario, setShowFormulario] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+
+  // ESTADO PARA O VISUALIZADOR LATERAL
+  const [viewerOpen, setViewerOpen] = useState(false);
+  const [viewerDoc, setViewerDoc] = useState<any>(null);
+  const [viewerFile, setViewerFile] = useState<string | null>(null);
 
   useEffect(() => {
     const hasSearchedBefore = sessionStorage.getItem("hasSearched");
@@ -59,7 +63,10 @@ const Index = () => {
   // Cálculo de paginação
   const totalPages = Math.ceil(documents.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentDocuments = documents.slice(startIndex, startIndex + itemsPerPage);
+  const currentDocuments = documents.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -69,19 +76,12 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-slate-50">
-
       <main className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8 text-red-800">
           Sistema de documentação urbanística e cartográfica
         </h1>
 
-        <section>
-
-
-
-
-
-        </section>
+        <section>{/* ... */}</section>
 
         {/* <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">
@@ -123,7 +123,14 @@ const Index = () => {
               <SideFilters />
             </div>
             <div className="lg:w-3/4">
-              <DocumentCards isInicialAdm={false} />
+              <DocumentCards
+                isInicialAdm={false}
+                onViewFile={(doc, fileLabel) => {
+                  setViewerDoc(doc);
+                  setViewerFile(fileLabel);
+                  setViewerOpen(true);
+                }}
+              />
               <div className="flex justify-center items-center gap-4 mt-6">
                 {/* Paginação */}
                 <button
@@ -141,10 +148,11 @@ const Index = () => {
                   return (
                     <button
                       key={page}
-                      className={`px-4 py-2 rounded ${currentPage === page
+                      className={`px-4 py-2 rounded ${
+                        currentPage === page
                           ? "bg-red-700 text-white"
                           : "bg-gray-200 hover:bg-gray-300"
-                        }`}
+                      }`}
                       onClick={() => handlePageChange(page)}
                     >
                       {page}
@@ -207,7 +215,17 @@ const Index = () => {
         open={showEscolha}
         onClose={() => setShowEscolha(false)}
         onSelect={handleEscolhaSelect}
-        onOpenReportModal={() => { /* Implementar lógica ou deixar vazio se não necessário */ }}
+        onOpenReportModal={() => {
+          /* Implementar lógica ou deixar vazio se não necessário */
+        }}
+      />
+
+      {/* VISUALIZADOR LATERAL */}
+      <ViewerSidebar
+        isOpen={viewerOpen}
+        onClose={() => setViewerOpen(false)}
+        document={viewerDoc}
+        selectedFile={viewerFile}
       />
     </div>
   );

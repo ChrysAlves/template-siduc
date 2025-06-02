@@ -1,7 +1,19 @@
 import React from "react";
-import { X, Folder, FileText, MoreHorizontal, Plus, Upload } from "lucide-react";
+import {
+  X,
+  Folder,
+  FileText,
+  MoreHorizontal,
+  Plus,
+  Upload,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { FileItem } from "./FileManager";
 import { toast } from "@/components/ui/use-toast";
 
@@ -37,7 +49,9 @@ const FolderModal: React.FC<FolderModalProps> = ({
     return <FileText className="text-blue-500" size={20} />;
   };
 
-  const filesInFolder = allFolders.filter((file) => file.parentId === folder.id);
+  const filesInFolder = allFolders.filter(
+    (file) => file.parentId === folder.id
+  );
 
   const handleDragStart = (file: FileItem) => {
     file.isDragging = true;
@@ -81,40 +95,65 @@ const FolderModal: React.FC<FolderModalProps> = ({
           <h3 className="text-sm font-medium text-gray-50">Todas as Pastas</h3>
         </div>
         <div className="p-2">
-          {allFolders.map((item) => (
-            <div
-              key={item.id}
-              draggable
-              onDragStart={(e) => {
-                e.dataTransfer.setData("text/plain", item.id); // Armazena o ID do arquivo arrastado
-              }}
-              onDragOver={(e) => e.preventDefault()} // Permite o drop
-              onDrop={(e) => {
-                e.preventDefault();
-                const draggedFileId = e.dataTransfer.getData("text/plain");
-                const draggedFile = allFolders.find((f) => f.id === draggedFileId);
-                if (draggedFile) {
-                  onMoveFile(draggedFile.id, item.type === "folder" ? item.id : null); // Move para a pasta ou para fora
-                }
-              }}
-              onClick={() => {
-                if (item.type === "folder") {
-                  onFolderClick(item); // Navega para a pasta ao clicar
-                }
-              }}
-              className={`w-full flex items-center space-x-2 px-3 py-2 rounded text-sm transition-colors ${item.id === folder?.id
-                  ? "bg-black text-white"
-                  : "text-gray-50 hover:bg-gray-700 hover:text-white"
+          {/* Pastas */}
+          {allFolders
+            .filter((item) => item.type === "folder" && !item.parentId)
+            .map((item) => (
+              <div
+                key={item.id}
+                draggable
+                onDragStart={(e) => {
+                  e.dataTransfer.setData("dragged-file-id", item.id);
+                  e.dataTransfer.setData("dragged-type", "folder");
+                }}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  const draggedFileId =
+                    e.dataTransfer.getData("dragged-file-id");
+                  const draggedType = e.dataTransfer.getData("dragged-type");
+                  // Só move se for arquivo (não pasta) e não for a própria pasta
+                  if (
+                    draggedType !== "folder" &&
+                    draggedFileId &&
+                    draggedFileId !== item.id
+                  ) {
+                    onMoveFile(draggedFileId, item.id);
+                  }
+                }}
+                onClick={() => {
+                  if (item.type === "folder") {
+                    onFolderClick(item);
+                  }
+                }}
+                className={`w-full flex items-center space-x-2 px-3 py-2 rounded text-sm transition-colors ${
+                  item.id === folder?.id
+                    ? "bg-black text-white"
+                    : "text-gray-50 hover:bg-gray-700 hover:text-white"
                 }`}
-            >
-              {item.type === "folder" ? (
+              >
                 <Folder size={16} className="text-yellow-500" />
-              ) : (
-                <FileText size={16} className="text-blue-500" />
-              )}
-              <span className="truncate">{item.name}</span>
-            </div>
-          ))}
+                <span className="truncate">{item.name}</span>
+              </div>
+            ))}
+
+          {/* Arquivos soltos (sem pasta) */}
+          {allFolders
+            .filter((item) => item.type !== "folder" && !item.parentId)
+            .map((item) => (
+              <div
+                key={item.id}
+                draggable
+                onDragStart={(e) => {
+                  e.dataTransfer.setData("dragged-file-id", item.id);
+                  e.dataTransfer.setData("dragged-type", "file");
+                }}
+                className="w-full flex items-center space-x-2 px-3 py-2 rounded text-sm transition-colors text-blue-200 hover:bg-gray-700 hover:text-white cursor-pointer"
+              >
+                <FileText size={16} className="text-blue-400" />
+                <span className="truncate">{item.name}</span>
+              </div>
+            ))}
         </div>
       </div>
 
@@ -125,14 +164,11 @@ const FolderModal: React.FC<FolderModalProps> = ({
           <div className="flex items-center justify-between p-6 border-b bg-gray-50">
             <div className="flex items-center space-x-3">
               <Folder className="text-yellow-500" size={24} />
-              <h2 className="text-xl font-semibold text-gray-900">{folder.name}</h2>
+              <h2 className="text-xl font-semibold text-gray-900">
+                {folder.name}
+              </h2>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClose}
-              className="p-2"
-            >
+            <Button variant="ghost" size="sm" onClick={onClose} className="p-2">
               <X size={20} />
             </Button>
           </div>
@@ -179,10 +215,9 @@ const FolderModal: React.FC<FolderModalProps> = ({
                   <div
                     key={file.id}
                     draggable
-                    onDragStart={() => handleDragStart(file)}
-                    onDrop={(e) => {
-                      e.preventDefault();
-                      handleDrop(folder.id, file);
+                    onDragStart={(e) => {
+                      e.dataTransfer.setData("dragged-file-id", file.id);
+                      e.dataTransfer.setData("dragged-type", "file");
                     }}
                     className="grid grid-cols-12 gap-4 px-6 py-4 hover:bg-gray-50 transition-colors duration-150"
                   >
@@ -200,16 +235,24 @@ const FolderModal: React.FC<FolderModalProps> = ({
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
-                          <DropdownMenuItem onClick={() => handleFileAction("move", file)}>
+                          <DropdownMenuItem
+                            onClick={() => handleFileAction("move", file)}
+                          >
                             Mover
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleFileAction("rename", file)}>
+                          <DropdownMenuItem
+                            onClick={() => handleFileAction("rename", file)}
+                          >
                             Renomear
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleFileAction("delete", file)}>
+                          <DropdownMenuItem
+                            onClick={() => handleFileAction("delete", file)}
+                          >
                             Excluir
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleFileAction("download", file)}>
+                          <DropdownMenuItem
+                            onClick={() => handleFileAction("download", file)}
+                          >
                             Download
                           </DropdownMenuItem>
                         </DropdownMenuContent>

@@ -13,11 +13,11 @@ interface DocumentData {
   id: number;
   number: string;
   status:
-  | "aprovado"
-  | "aprovado_registrado"
-  | "aprovado_aguardando"
-  | "anulado"
-  | "nao_registrado";
+    | "aprovado"
+    | "aprovado_registrado"
+    | "aprovado_aguardando"
+    | "anulado"
+    | "nao_registrado";
   sei: string;
   dataCartorio: string;
   ra: string;
@@ -66,16 +66,23 @@ const parseNumber = (number: string) => {
   };
 };
 
+interface DocumentCardsProps {
+  isInicialAdm?: boolean;
+  onViewFile?: (doc: DocumentData, fileLabel: string) => void;
+}
+
 const DocumentCard = ({
   document: doc,
   expanded,
   onExpand,
-  isInicialAdm, // Propriedade para verificar se está na página InicialAdm
+  isInicialAdm,
+  onViewFile,
 }: {
   document: DocumentData;
   expanded: boolean;
   onExpand: () => void;
-  isInicialAdm?: boolean; // Propriedade opcional
+  isInicialAdm?: boolean;
+  onViewFile?: (doc: DocumentData, fileLabel: string) => void;
 }) => {
   const { urb, middle, suffix } = parseNumber(doc.number);
 
@@ -98,8 +105,9 @@ const DocumentCard = ({
 
   return (
     <Card
-      className={`shadow-md hover:shadow-lg transition-shadow cursor-pointer select-none ${expanded ? "py-4" : "py-1"
-        }`}
+      className={`shadow-md hover:shadow-lg transition-shadow cursor-pointer select-none ${
+        expanded ? "py-4" : "py-1"
+      }`}
       onClick={onExpand}
     >
       <CardHeader className={`pb-2 pt-2 ${expanded ? "" : "py-1"}`}>
@@ -116,8 +124,9 @@ const DocumentCard = ({
             )}
           </span>
           <span
-            className={`text-base px-3 py-1 rounded font-bold ${statusColors[doc.status]
-              }`}
+            className={`text-base px-3 py-1 rounded font-bold ${
+              statusColors[doc.status]
+            }`}
           >
             {statusLabels[doc.status]}
           </span>
@@ -167,7 +176,10 @@ const DocumentCard = ({
                     className="text-gray-700 hover:text-gray-900 transition absolute -top-6 right-0"
                     onClick={(e) => {
                       e.stopPropagation();
-                      console.log("Engrenagem de edição clicada para o documento:", doc.id);
+                      console.log(
+                        "Engrenagem de edição clicada para o documento:",
+                        doc.id
+                      );
                     }}
                     title="Editar documento"
                   >
@@ -202,7 +214,7 @@ const DocumentCard = ({
                         className="hover:text-red-600 flex items-center gap-1"
                         onClick={(e) => {
                           e.stopPropagation();
-                          window.open(`/arquivos/${file.name}.pdf`, "_blank");
+                          if (onViewFile) onViewFile(doc, file.label);
                         }}
                         title="Visualizar arquivo"
                       >
@@ -220,11 +232,10 @@ const DocumentCard = ({
   );
 };
 
-interface DocumentCardsProps {
-  isInicialAdm?: boolean;
-}
-
-const DocumentCards: React.FC<DocumentCardsProps> = ({ isInicialAdm }) => {
+const DocumentCards: React.FC<DocumentCardsProps> = ({
+  isInicialAdm,
+  onViewFile,
+}) => {
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
   // Exemplo de documentos com os novos status:
@@ -320,7 +331,8 @@ const DocumentCards: React.FC<DocumentCardsProps> = ({ isInicialAdm }) => {
           document={doc}
           expanded={expandedId === doc.id}
           onExpand={() => setExpandedId(expandedId === doc.id ? null : doc.id)}
-          isInicialAdm={isInicialAdm} // Use o valor recebido da propriedade
+          isInicialAdm={isInicialAdm}
+          onViewFile={onViewFile}
         />
       ))}
     </div>

@@ -6,6 +6,7 @@ import DocumentCards from "@/components/DocumentCards";
 import SideFilters from "@/components/SideFilters";
 import SearchOverlay from "@/components/SearchOverlay";
 import EscolhaOverlay from "@/components/EscolhaOverlay";
+import ViewerSidebar from "@/components/ViewerSidebar";
 
 const tiposDocumento = [
   "Relatório",
@@ -49,17 +50,9 @@ const FormularioOverlayComponent = ({
     onClose();
   };
 
-  useEffect(() => {
-    if (tipoDocumento && ano) {
-      setNome(`${tipoDocumento}-${ano}`);
-    } else {
-      setNome("");
-    }
-  }, [tipoDocumento, ano]);
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/30 backdrop-blur">
-      <div className="bg-white rounded-xl shadow-2xl p-6 pb-8 w-full max-w-3xl relative flex flex-col items-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/30 backdrop-blur py-8 md:py-16 overflow-y-auto">
+      <div className="bg-white rounded-xl shadow-2xl p-10 max-h-[90vh] w-full max-w-4xl relative flex flex-col items-center my-12">
         {/* Botão X para fechar */}
         <button
           className="absolute top-4 right-4 text-gray-400 hover:text-red-700 text-2xl"
@@ -72,13 +65,13 @@ const FormularioOverlayComponent = ({
         <img
           src="/logosisduc.png"
           alt="SISDUC"
-          className="h-16 w-auto mx-auto mb-2"
+          className="h-20 w-auto mx-auto mb-2 mt-2"
         />
-        <h2 className="text-xl font-bold mb-4 text-center text-red-700">
+        <h2 className="text-2xl font-bold mb-4 text-center text-red-700 mt-0">
           Cadastro de Projeto
         </h2>
         <form className="w-full flex flex-col gap-4" onSubmit={handleSubmit}>
-          {/* Conteúdo do formulário */}
+          {/* Grid de 3 colunas para os campos principais */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="block mb-1 font-medium text-base">Nome</label>
@@ -87,7 +80,8 @@ const FormularioOverlayComponent = ({
                 className="border border-stone-400 rounded px-3 py-2 focus:outline-none focus:border-stone-700 text-base w-full"
                 placeholder="Nome"
                 value={nome}
-                readOnly // Torna o campo não editável
+                onChange={(e) => setNome(e.target.value)}
+                required
               />
             </div>
             <div>
@@ -191,7 +185,9 @@ const FormularioOverlayComponent = ({
               >
                 <option value="">Ano</option>
                 {Array.from({ length: 21 }, (_, i) => 2024 - i).map((a) => (
-                  <option key={a} value={a}>{a}</option>
+                  <option key={a} value={a}>
+                    {a}
+                  </option>
                 ))}
               </select>
             </div>
@@ -222,36 +218,38 @@ const FormularioOverlayComponent = ({
           </div>
 
           {/* Grid de 3 colunas para Legislação, Responsável Técnico, CREA/CAU */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
             <div>
-              <label className="block mb-1 font-medium text-base">
+              <label className="block mb-0.5 font-medium text-xs">
                 Legislação de aprovação
               </label>
               <input
                 type="text"
-                className="border border-stone-400 rounded px-3 py-2 focus:outline-none focus:border-stone-700 text-base w-full"
+                className="border border-stone-400 rounded px-2 py-0.5 focus:outline-none focus:border-stone-700 text-sm w-full"
                 placeholder="Legislação de aprovação"
                 value={legislacao}
                 onChange={(e) => setLegislacao(e.target.value)}
               />
             </div>
             <div>
-              <label className="block mb-1 font-medium text-base">
+              <label className="block mb-0.5 font-medium text-xs">
                 Responsável Técnico
               </label>
               <input
                 type="text"
-                className="border border-stone-400 rounded px-3 py-2 focus:outline-none focus:border-stone-700 text-base w-full"
+                className="border border-stone-400 rounded px-2 py-0.5 focus:outline-none focus:border-stone-700 text-sm w-full"
                 placeholder="Responsável Técnico"
                 value={responsavel}
                 onChange={(e) => setResponsavel(e.target.value)}
               />
             </div>
             <div>
-              <label className="block mb-1 font-medium text-base">CREA/CAU</label>
+              <label className="block mb-0.5 font-medium text-xs">
+                CREA/CAU
+              </label>
               <input
                 type="text"
-                className="border border-stone-400 rounded px-3 py-2 focus:outline-none focus:border-stone-700 text-base w-full"
+                className="border border-stone-400 rounded px-2 py-0.5 focus:outline-none focus:border-stone-700 text-sm w-full"
                 placeholder="CREA/CAU"
                 value={creaCau}
                 onChange={(e) => setCreaCau(e.target.value)}
@@ -263,7 +261,6 @@ const FormularioOverlayComponent = ({
           <div>
             <label className="block mb-0.5 font-medium text-xs">Status</label>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
-              {/* Status "Aprovado" e "Aprovado/aguardando registro" */}
               <label className="flex items-center gap-1 text-sm">
                 <input
                   type="radio"
@@ -282,24 +279,6 @@ const FormularioOverlayComponent = ({
                 />
                 Aprovado/aguardando registro
               </label>
-            </div>
-          </div>
-
-          {/* Observação */}
-          <div>
-            <label className="block mb-0.5 font-medium text-xs">Observação</label>
-            <textarea
-              className="border border-stone-400 rounded px-2 py-1 focus:outline-none focus:border-stone-700 text-sm w-full"
-              placeholder="Digite suas observações aqui..."
-              value={observacao}
-              onChange={(e) => setObservacao(e.target.value)}
-              rows={2}
-            />
-          </div>
-
-          {/* Restante dos status */}
-          <div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
               <label className="flex items-center gap-1 text-sm">
                 <input
                   type="radio"
@@ -345,6 +324,20 @@ const FormularioOverlayComponent = ({
                 Projeto restrito
               </label>
             </div>
+          </div>
+
+          {/* Observação */}
+          <div>
+            <label className="block mb-0.5 font-medium text-xs">
+              Observação
+            </label>
+            <textarea
+              className="border border-stone-400 rounded px-2 py-1 focus:outline-none focus:border-stone-700 text-sm w-full"
+              placeholder="Digite suas observações aqui..."
+              value={observacao}
+              onChange={(e) => setObservacao(e.target.value)}
+              rows={2}
+            />
           </div>
 
           {/* Upload de arquivos estilizado */}
@@ -433,12 +426,9 @@ const FormularioOverlayComponent = ({
               </div>
             )}
           </div>
-
-          {/* Botão Criar */}
           <button
             type="submit"
-            
-            className="w-full bg-red-700 text-white font-semibold py-2 rounded-lg mt-4 hover:bg-red-800 transition text-base"
+            className="w-full bg-red-700 text-white font-semibold py-2 rounded-lg mt-2 hover:bg-red-800 transition text-base"
           >
             Criar
           </button>
@@ -457,7 +447,11 @@ const InicialAdm = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5); // Número de itens por página
+  const itemsPerPage = 5; // Número de itens por página
+
+  const [viewerOpen, setViewerOpen] = useState(false);
+  const [viewerDoc, setViewerDoc] = useState<any>(null);
+  const [viewerFile, setViewerFile] = useState<string | null>(null);
 
   // Simulação de documentos
   const documents = Array.from({ length: 50 }, (_, i) => ({
@@ -551,9 +545,16 @@ const InicialAdm = () => {
               <SideFilters />
             </div>
             <div className="lg:w-3/4">
-              <DocumentCards isInicialAdm={true} />
+              <DocumentCards
+                isInicialAdm={true}
+                onViewFile={(doc, fileLabel) => {
+                  setViewerDoc(doc);
+                  setViewerFile(fileLabel);
+                  setViewerOpen(true);
+                }}
+              />
               {/* Paginação */}
-              <div className="flex justify-center items-center gap-4 mt-6">
+              <div className="flex justify-center items-center gap-2 mt-6">
                 <button
                   className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
                   onClick={() => handlePageChange(currentPage - 1)}
@@ -588,27 +589,6 @@ const InicialAdm = () => {
                 >
                   Próximo
                 </button>
-
-                {/* Seletor de itens por página */}
-                <div className="flex items-center gap-2">
-                  <label htmlFor="itemsPerPage" className="text-sm font-medium">
-                    Documentos por página:
-                  </label>
-                  <select
-                    id="itemsPerPage"
-                    className="border border-stone-400 rounded px-2 py-1 text-sm"
-                    value={itemsPerPage}
-                    onChange={(e) => {
-                      setItemsPerPage(Number(e.target.value));
-                      setCurrentPage(1); // Reinicia para a primeira página
-                    }}
-                  >
-                    <option value={5}>5</option>
-                    <option value={10}>10</option>
-                    <option value={20}>20</option>
-                    <option value={50}>50</option>
-                  </select>
-                </div>
               </div>
             </div>
           </div>
@@ -721,6 +701,14 @@ const InicialAdm = () => {
           </div>
         </div>
       )}
+
+      {/* Sidebar do visualizador */}
+      <ViewerSidebar
+        isOpen={viewerOpen}
+        onClose={() => setViewerOpen(false)}
+        document={viewerDoc}
+        selectedFile={viewerFile}
+      />
     </div>
   );
 };
