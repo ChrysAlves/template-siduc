@@ -9,7 +9,7 @@ interface SubDocument {
   type: string;
 }
 
-interface Document {
+interface DocumentData {
   id: number;
   number: string;
   status:
@@ -34,7 +34,7 @@ const statusColors: Record<string, string> = {
 };
 
 // Função para exibir o texto correto do status
-const statusLabels: Record<Document["status"], string> = {
+const statusLabels: Record<DocumentData["status"], string> = {
   aprovado: "Aprovado",
   aprovado_registrado: "Aprovado - Registrado em cartório",
   aprovado_aguardando: "Aprovado - Aguardando Registro",
@@ -67,23 +67,23 @@ const parseNumber = (number: string) => {
 };
 
 const DocumentCard = ({
-  document,
+  document: doc,
   expanded,
   onExpand,
   isInicialAdm, // Propriedade para verificar se está na página InicialAdm
 }: {
-  document: Document;
+  document: DocumentData;
   expanded: boolean;
   onExpand: () => void;
   isInicialAdm?: boolean; // Propriedade opcional
 }) => {
-  const { urb, middle, suffix } = parseNumber(document.number);
+  const { urb, middle, suffix } = parseNumber(doc.number);
 
   // Exemplo de arquivos relacionados ao documento
   const files = [
-    { name: `${document.number}-anexo1`, label: "URB 001/2024" },
-    { name: `${document.number}-anexo2`, label: "MDE 001/2024" },
-    { name: `${document.number}-anexo3`, label: "PSG 001/2024" },
+    { name: `${doc.number}-anexo1`, label: "URB 001/2024" },
+    { name: `${doc.number}-anexo2`, label: "MDE 001/2024" },
+    { name: `${doc.number}-anexo3`, label: "PSG 001/2024" },
   ];
 
   const handleDownload = (fileName: string) => {
@@ -116,10 +116,10 @@ const DocumentCard = ({
             )}
           </span>
           <span
-            className={`text-base px-3 py-1 rounded font-bold ${statusColors[document.status]
+            className={`text-base px-3 py-1 rounded font-bold ${statusColors[doc.status]
               }`}
           >
-            {statusLabels[document.status]}
+            {statusLabels[doc.status]}
           </span>
         </div>
         {/* Botão de engrenagem no canto direito, visível apenas se expandido e na página InicialAdm */}
@@ -130,7 +130,7 @@ const DocumentCard = ({
               className="text-gray-700 hover:text-gray-900 transition"
               onClick={(e) => {
                 e.stopPropagation();
-                console.log("Engrenagem clicada para o documento:", document.id);
+                console.log("Engrenagem clicada para o documento:", doc.id);
               }}
               title="Configurações"
             >
@@ -143,17 +143,17 @@ const DocumentCard = ({
         {expanded && (
           <div>
             <p>
-              <strong>SEI:</strong> {document.sei}
+              <strong>SEI:</strong> {doc.sei}
             </p>
             <p>
-              <strong>RA:</strong> {document.ra}
+              <strong>RA:</strong> {doc.ra}
             </p>
             <p>
               <strong>Processo de Alteração:</strong>{" "}
-              {document.processoAlteracao || "N/A"}
+              {doc.processoAlteracao || "N/A"}
             </p>
             <p>
-              <strong>Data de Registro:</strong> {document.dataCartorio}
+              <strong>Data de Registro:</strong> {doc.dataCartorio}
             </p>
             {/* Aba de arquivos */}
             <div className="mt-4 relative">
@@ -167,7 +167,7 @@ const DocumentCard = ({
                     className="text-gray-700 hover:text-gray-900 transition absolute -top-6 right-0"
                     onClick={(e) => {
                       e.stopPropagation();
-                      console.log("Engrenagem de edição clicada para o documento:", document.id);
+                      console.log("Engrenagem de edição clicada para o documento:", doc.id);
                     }}
                     title="Editar documento"
                   >
@@ -228,7 +228,7 @@ const DocumentCards: React.FC<DocumentCardsProps> = ({ isInicialAdm }) => {
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
   // Exemplo de documentos com os novos status:
-  const documents: Document[] = [
+  const documents: DocumentData[] = [
     {
       id: 1,
       number: "URB/MDE/PSG 001-2024",

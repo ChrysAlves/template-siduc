@@ -48,7 +48,7 @@ const Index = () => {
   };
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; // Número de documentos por página
+  const [itemsPerPage, setItemsPerPage] = useState(5); // Número de documentos por página
 
   // Simulação de documentos
   const documents = Array.from({ length: 50 }, (_, i) => ({
@@ -123,9 +123,9 @@ const Index = () => {
               <SideFilters />
             </div>
             <div className="lg:w-3/4">
-              <DocumentCards isInicialAdm={false}/>
-              {/* Paginação */}
-              <div className="flex justify-center items-center gap-2 mt-6">
+              <DocumentCards isInicialAdm={false} />
+              <div className="flex justify-center items-center gap-4 mt-6">
+                {/* Paginação */}
                 <button
                   className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
                   onClick={() => handlePageChange(currentPage - 1)}
@@ -159,6 +159,27 @@ const Index = () => {
                 >
                   Próximo
                 </button>
+
+                {/* Seletor de itens por página */}
+                <div className="flex items-center gap-2">
+                  <label htmlFor="itemsPerPage" className="text-sm font-medium">
+                    Documentos por página:
+                  </label>
+                  <select
+                    id="itemsPerPage"
+                    className="border border-stone-400 rounded px-2 py-1 text-sm"
+                    value={itemsPerPage}
+                    onChange={(e) => {
+                      setItemsPerPage(Number(e.target.value));
+                      setCurrentPage(1); // Reinicia para a primeira página
+                    }}
+                  >
+                    <option value={5}>5</option>
+                    <option value={10}>10</option>
+                    <option value={20}>20</option>
+                    <option value={50}>50</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>

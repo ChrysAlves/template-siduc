@@ -44,7 +44,7 @@ const FileManager = () => {
     { id: '5', name: 'Samambaia', type: 'folder', size: '15.7 GB', modified: '2024-05-11' },
     { id: '6', name: 'Ceilândia', type: 'folder', size: '1.2 GB', modified: '2024-05-10' },
     { id: '7', name: 'Águas Claras', type: 'folder', size: '8.9 GB', modified: '2024-05-09' },
-    { id: '8', name: 'Coordenadas_GPS.kml', type: 'kml', size: '0.5 GB', modified: '2024-05-08' },
+  
   ];
 
   const getFileIcon = (type: string) => {
