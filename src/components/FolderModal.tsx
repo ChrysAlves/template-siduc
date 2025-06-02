@@ -102,11 +102,10 @@ const FolderModal: React.FC<FolderModalProps> = ({
                   onFolderClick(item); // Navega para a pasta ao clicar
                 }
               }}
-              className={`w-full flex items-center space-x-2 px-3 py-2 rounded text-sm transition-colors ${
-                item.id === folder?.id
+              className={`w-full flex items-center space-x-2 px-3 py-2 rounded text-sm transition-colors ${item.id === folder?.id
                   ? "bg-black text-white"
                   : "text-gray-50 hover:bg-gray-700 hover:text-white"
-              }`}
+                }`}
             >
               {item.type === "folder" ? (
                 <Folder size={16} className="text-yellow-500" />
