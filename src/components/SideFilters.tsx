@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import Select from "react-select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
@@ -29,6 +30,45 @@ const FilterSection = ({ title, children }: FilterSectionProps) => {
 };
 
 const SideFilters = () => {
+  const [selectedRAs, setSelectedRAs] = useState<readonly any[]>([]);
+
+  const options = [
+    { value: "aguas-claras", label: "Águas Claras" },
+    { value: "arniqueira", label: "Arniqueira" },
+    { value: "brazlandia", label: "Brazlândia" },
+    { value: "candangolandia", label: "Candangolândia" },
+    { value: "ceilandia", label: "Ceilândia" },
+    { value: "cruzeiro", label: "Cruzeiro" },
+    { value: "distrito-federal", label: "Distrito Federal" },
+    { value: "fercal", label: "Fercal" },
+    { value: "gama", label: "Gama" },
+    { value: "guara", label: "Guará" },
+    { value: "itapoa", label: "Itapoã" },
+    { value: "jardim-botanico", label: "Jardim Botânico" },
+    { value: "lago-norte", label: "Lago Norte" },
+    { value: "lago-sul", label: "Lago Sul" },
+    { value: "nucleo-bandeirante", label: "Núcleo Bandeirante" },
+    { value: "paranoa", label: "Paranoá" },
+    { value: "park-way", label: "Park Way" },
+    { value: "planaltina", label: "Planaltina" },
+    { value: "plano-piloto", label: "Plano Piloto" },
+    { value: "recanto-das-emas", label: "Recanto das Emas" },
+    { value: "riacho-fundo", label: "Riacho Fundo" },
+    { value: "riacho-fundo-ii", label: "Riacho Fundo II" },
+    { value: "samambaia", label: "Samambaia" },
+    { value: "santa-maria", label: "Santa Maria" },
+    { value: "sao-sebastiao", label: "São Sebastião" },
+    { value: "scia", label: "SCIA" },
+    { value: "sia", label: "SIA" },
+    { value: "sobradinho", label: "Sobradinho" },
+    { value: "sobradinho-ii", label: "Sobradinho II" },
+    { value: "sol-nascente", label: "Sol Nascente e Por do Sol" },
+    { value: "sudoeste", label: "Sudoeste/Octogonal" },
+    { value: "taguatinga", label: "Taguatinga" },
+    { value: "varjao", label: "Varjão" },
+    { value: "vicente-pires", label: "Vicente Pires" },
+  ];
+
   return (
     <Card className="shadow-md sticky top-4">
       <CardHeader>
@@ -38,26 +78,15 @@ const SideFilters = () => {
         {/* RA */}
         <FilterSection title="RA">
           <div className="space-y-2">
-            <div className="flex items-center space-x-2">
-              <Checkbox id="paranoa" />
-              <Label htmlFor="paranoa">Paranoá</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox id="ceilandia" />
-              <Label htmlFor="ceilandia">Ceilândia</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox id="asasul" />
-              <Label htmlFor="asasul">Asa Sul</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox id="samambaia" />
-              <Label htmlFor="samambaia">Samambaia</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox id="aguasclaras" />
-              <Label htmlFor="aguasclaras">Águas Claras</Label>
-            </div>
+            <Select
+              options={options}
+              isMulti
+              value={selectedRAs}
+              onChange={(selected) => setSelectedRAs([...selected])}
+              placeholder="Selecione as RAs"
+              className="basic-multi-select"
+              classNamePrefix="select"
+            />
           </div>
         </FilterSection>
 

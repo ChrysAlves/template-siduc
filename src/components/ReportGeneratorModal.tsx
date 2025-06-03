@@ -116,7 +116,7 @@ const ReportGeneratorModal: React.FC<ReportGeneratorModalProps> = ({
       {/* Modal */}
       <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="bg-gradient-to-r from-red-700 to-white p-6 rounded-t-2xl">
+        <div className="bg-red-700 p-6 rounded-t-2xl">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="bg-white/20 p-2 rounded-lg">
@@ -138,185 +138,174 @@ const ReportGeneratorModal: React.FC<ReportGeneratorModalProps> = ({
         </div>
 
         {/* Content */}
-        <div className="p-8">
+        <div className="p-8 space-y-8">
+          {/* Filtros */}
           <div className="grid lg:grid-cols-2 gap-8">
-            {/* Left Column - Basic Info */}
-            <div className="space-y-6">
-              <div className="bg-gray-50 p-6 rounded-xl border">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                  <Filter className="mr-2 h-5 w-5 text-red-700" />
-                  Informações Básicas
-                </h3>
-
-                <div className="space-y-4">
-                  <div>
-                    <Label
-                      htmlFor="reportName"
-                      className="text-sm font-medium text-gray-700"
-                    >
-                      Nome do Relatório *
-                    </Label>
-                    <Input
-                      id="reportName"
-                      value={reportName}
-                      onChange={(e) => setReportName(e.target.value)}
-                      placeholder="Digite o nome do relatório"
-                      className="mt-1"
-                    />
-                  </div>
-
-                  <div>
-                    <Label className="text-sm font-medium text-gray-700">
-                      Tipo de Relatório *
-                    </Label>
-                    <Select value={reportType} onValueChange={setReportType}>
-                      <SelectTrigger className="mt-1">
-                        <SelectValue placeholder="Selecione o tipo" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="vendas">
-                          Relatório de Vendas
-                        </SelectItem>
-                        <SelectItem value="financeiro">
-                          Relatório Financeiro
-                        </SelectItem>
-                        <SelectItem value="operacional">
-                          Relatório Operacional
-                        </SelectItem>
-                        <SelectItem value="marketing">
-                          Relatório de Marketing
-                        </SelectItem>
-                        <SelectItem value="personalizado">
-                          Relatório Personalizado
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+            {/* Período do Relatório */}
+            <div className="bg-red-50 p-6 rounded-xl border border-red-200">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                <CalendarIcon className="mr-2 h-5 w-5 text-red-700" />
+                Período do Relatório *
+              </h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm font-medium text-gray-700">
+                    Data Inicial
+                  </Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal mt-1",
+                          !startDate && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {startDate
+                          ? format(startDate, "dd/MM/yyyy", { locale: ptBR })
+                          : "Selecionar"}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={startDate}
+                        onSelect={setStartDate}
+                        initialFocus
+                        className="pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
-              </div>
 
-              {/* Date Range */}
-              <div className="bg-red-50 p-6 rounded-xl border border-red-200">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                  <CalendarIcon className="mr-2 h-5 w-5 text-red-700" />
-                  Período do Relatório *
-                </h3>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label className="text-sm font-medium text-gray-700">
-                      Data Inicial
-                    </Label>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            "w-full justify-start text-left font-normal mt-1",
-                            !startDate && "text-muted-foreground"
-                          )}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {startDate
-                            ? format(startDate, "dd/MM/yyyy", { locale: ptBR })
-                            : "Selecionar"}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={startDate}
-                          onSelect={setStartDate}
-                          initialFocus
-                          className="pointer-events-auto"
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-
-                  <div>
-                    <Label className="text-sm font-medium text-gray-700">
-                      Data Final
-                    </Label>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            "w-full justify-start text-left font-normal mt-1",
-                            !endDate && "text-muted-foreground"
-                          )}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {endDate
-                            ? format(endDate, "dd/MM/yyyy", { locale: ptBR })
-                            : "Selecionar"}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={endDate}
-                          onSelect={setEndDate}
-                          initialFocus
-                          className="pointer-events-auto"
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-700">
+                    Data Final
+                  </Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal mt-1",
+                          !endDate && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {endDate
+                          ? format(endDate, "dd/MM/yyyy", { locale: ptBR })
+                          : "Selecionar"}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={endDate}
+                        onSelect={setEndDate}
+                        initialFocus
+                        className="pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
               </div>
             </div>
 
-            {/* Right Column - Filters */}
-            <div className="space-y-6">
-              {/* Categories Filter */}
-              <div className="bg-red-50 p-6 rounded-xl border border-red-200">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                  Categorias
-                </h3>
-                <div className="grid grid-cols-2 gap-3">
-                  {categories.map((category) => (
-                    <div key={category} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={category}
-                        checked={selectedCategories.includes(category)}
-                        onCheckedChange={(checked) =>
-                          handleCategoryChange(category, checked as boolean)
-                        }
-                      />
-                      <Label
-                        htmlFor={category}
-                        className="text-sm text-gray-700"
-                      >
-                        {category}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
+            {/* Região Administrativa */}
+            <div className="bg-red-50 p-6 rounded-xl border border-red-200">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                Região Administrativa
+              </h3>
+              <Select onValueChange={(value) => console.log(value)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Selecione uma RA" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="aguas-claras">Águas Claras</SelectItem>
+                  <SelectItem value="arniqueira">Arniqueira</SelectItem>
+                  <SelectItem value="brazlandia">Brazlândia</SelectItem>
+                  <SelectItem value="candangolandia">Candangolândia</SelectItem>
+                  <SelectItem value="ceilandia">Ceilândia</SelectItem>
+                  <SelectItem value="cruzeiro">Cruzeiro</SelectItem>
+                  <SelectItem value="distrito-federal">Distrito Federal</SelectItem>
+                  <SelectItem value="fercal">Fercal</SelectItem>
+                  <SelectItem value="gama">Gama</SelectItem>
+                  <SelectItem value="guara">Guará</SelectItem>
+                  <SelectItem value="itapoa">Itapoã</SelectItem>
+                  <SelectItem value="jardim-botanico">Jardim Botânico</SelectItem>
+                  <SelectItem value="lago-norte">Lago Norte</SelectItem>
+                  <SelectItem value="lago-sul">Lago Sul</SelectItem>
+                  <SelectItem value="nucleo-bandeirante">Núcleo Bandeirante</SelectItem>
+                  <SelectItem value="paranoa">Paranoá</SelectItem>
+                  <SelectItem value="park-way">Park Way</SelectItem>
+                  <SelectItem value="planaltina">Planaltina</SelectItem>
+                  <SelectItem value="plano-piloto">Plano Piloto</SelectItem>
+                  <SelectItem value="recanto-das-emas">Recanto das Emas</SelectItem>
+                  <SelectItem value="riacho-fundo">Riacho Fundo</SelectItem>
+                  <SelectItem value="riacho-fundo-ii">Riacho Fundo II</SelectItem>
+                  <SelectItem value="samambaia">Samambaia</SelectItem>
+                  <SelectItem value="santa-maria">Santa Maria</SelectItem>
+                  <SelectItem value="sao-sebastiao">São Sebastião</SelectItem>
+                  <SelectItem value="scia">SCIA</SelectItem>
+                  <SelectItem value="sia">SIA</SelectItem>
+                  <SelectItem value="sobradinho">Sobradinho</SelectItem>
+                  <SelectItem value="sobradinho-ii">Sobradinho II</SelectItem>
+                  <SelectItem value="sol-nascente">Sol Nascente e Por do Sol</SelectItem>
+                  <SelectItem value="sudoeste">Sudoeste/Octogonal</SelectItem>
+                  <SelectItem value="taguatinga">Taguatinga</SelectItem>
+                  <SelectItem value="varjao">Varjão</SelectItem>
+                  <SelectItem value="vicente-pires">Vicente Pires</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
-              {/* Status Filter */}
-              <div className="bg-red-50 p-6 rounded-xl border border-red-200">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                  Status
-                </h3>
-                <div className="space-y-3">
-                  {statusOptions.map((status) => (
-                    <div key={status} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={status}
-                        checked={selectedStatus.includes(status)}
-                        onCheckedChange={(checked) =>
-                          handleStatusChange(status, checked as boolean)
-                        }
-                      />
-                      <Label htmlFor={status} className="text-sm text-gray-700">
-                        {status}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
+            {/* Processo SEI */}
+            <div className="bg-red-50 p-6 rounded-xl border border-red-200">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                Processo SEI
+              </h3>
+              <Input
+                placeholder="Digite o número do processo SEI"
+                className="mt-1"
+              />
+            </div>
+
+            {/* Processo de Alteração de Projeto */}
+            <div className="bg-red-50 p-6 rounded-xl border border-red-200">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                Processo de Alteração de Projeto
+              </h3>
+              <Input
+                placeholder="Digite o número do processo de alteração"
+                className="mt-1"
+              />
+            </div>
+
+            {/* Status */}
+            <div className="bg-red-50 p-6 rounded-xl border border-red-200">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Status</h3>
+              <div className="space-y-3">
+                {[
+                  "Aprovado",
+                  "Aprovado - Registrado em cartório",
+                  "Aprovado - Aguardando registro",
+                  "Anulado",
+                  "Não registrado",
+                ].map((status) => (
+                  <div key={status} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={status}
+                      checked={selectedStatus.includes(status)}
+                      onCheckedChange={(checked) =>
+                        handleStatusChange(status, checked as boolean)
+                      }
+                    />
+                    <Label htmlFor={status} className="text-sm text-gray-700">
+                      {status}
+                    </Label>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

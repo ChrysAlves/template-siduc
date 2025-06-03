@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import Header from "@/components/Header";
-import { Listbox } from "@headlessui/react";
+import { Listbox, Portal } from "@headlessui/react";
 
 const membrosExemplo = [
   {
@@ -61,35 +61,58 @@ const funcoes = [
 
 const membrosMapoteca = [
   {
-    nome: "João Paulo Silva Porto",
-    usuario: "@joaopaulo",
-    origem: "Herdado de SEDUH",
+    nome: "Alexandre Cotins",
+    usuario: "@05947975190",
+    origem: "Herdado de SEDUH / DISIS",
     funcao: "Com acesso",
     expiracao: "",
     cor: "bg-red-700",
-    iniciais: "JP",
+    iniciais: "AC",
   },
   {
-    nome: "Maria Clara Souza",
-    usuario: "@mariaclara",
-    origem: "Membro direto por Alexandre Cotins",
-    funcao: "Sem acesso",
+    nome: "Ana Caroline Evangelista da Silva",
+    usuario: "@05831454165",
+    origem: "Membro direto por Henrique Goffeau Garnier de Souza",
+    funcao: "Com acesso",
     expiracao: "",
     cor: "bg-gray-500",
-    iniciais: "MC",
+    iniciais: "AE",
   },
   {
-    nome: "Lucas Fernandes",
-    usuario: "@lucasf",
-    origem: "Herdado de SEDUH",
-    funcao: "Com acesso",
+    nome: "Chrystian Alves Dos Santos",
+    usuario: "@03340480109",
+    origem: "Membro direto por João Paulo Silva Porto",
+    funcao: "Leitor",
     expiracao: "",
     cor: "bg-red-700",
-    iniciais: "LF",
+    iniciais: "CA",
+  },
+  {
+    nome: "ciuserseduh",
+    usuario: "@ciuserseduh",
+    origem: "Herdado de SEDUH / DISIS",
+    funcao: "Editor",
+    expiracao: "",
+    cor: "bg-red-700",
+    iniciais: "CI",
+  },
+  {
+    nome: "Emanuel Alvares Lima Camargo Ribeiro",
+    usuario: "@Aug 17, 4157",
+    origem: "Herdado de SEDUH",
+    funcao: "Sem acesso",
+    expiracao: "",
+    cor: "bg-red-700",
+    iniciais: "EA",
   },
 ];
 
-const funcoesMapoteca = ["Sem acesso", "Com acesso"];
+const funcoesMapoteca = [
+  "Sem acesso",
+  "Com acesso",
+  "Leitor",
+  "Editor",
+];
 
 const Administracao: React.FC = () => {
   const [membros, setMembros] = useState(membrosExemplo);
@@ -156,21 +179,19 @@ const Administracao: React.FC = () => {
         {/* Abas de controle de acesso */}
         <div className="flex mb-4">
           <button
-            className={`flex-1 py-2 rounded-t-lg font-semibold transition ${
-              abaAtiva === "geral"
-                ? "bg-white text-black shadow border border-b-0"
-                : "bg-gray-100 text-gray-500"
-            }`}
+            className={`flex-1 py-2 rounded-t-lg font-semibold transition ${abaAtiva === "geral"
+              ? "bg-white text-black shadow border border-b-0"
+              : "bg-gray-100 text-gray-500"
+              }`}
             onClick={() => setAbaAtiva("geral")}
           >
             Controle de Acesso Geral
           </button>
           <button
-            className={`flex-1 py-2 rounded-t-lg font-semibold transition ${
-              abaAtiva === "mapoteca"
-                ? "bg-white text-black shadow border border-b-0"
-                : "bg-gray-100 text-gray-500"
-            }`}
+            className={`flex-1 py-2 rounded-t-lg font-semibold transition ${abaAtiva === "mapoteca"
+              ? "bg-white text-black shadow border border-b-0"
+              : "bg-gray-100 text-gray-500"
+              }`}
             onClick={() => setAbaAtiva("mapoteca")}
           >
             Controle de Acesso Mapoteca
@@ -187,7 +208,7 @@ const Administracao: React.FC = () => {
                   <th className="py-4 px-4 text-left font-semibold">Conta</th>
                   <th className="py-4 px-4 text-left font-semibold">Origem</th>
                   <th className="py-4 pr-4  font-semibold">Função</th>
-                  <th className="py-4 pr-16  font-semibold">Expiração</th>
+                  <th className="py-4 pr-14  font-semibold">Expiração</th>
                 </tr>
               </thead>
               <tbody>
@@ -250,18 +271,20 @@ const Administracao: React.FC = () => {
                                 />
                               </svg>
                             </Listbox.Button>
-                            <Listbox.Options className="absolute mt-2 left-1/2 -translate-x-1/2 w-44 max-h-48 overflow-y-auto bg-gray-900 rounded-xl shadow-2xl py-1 z-10 flex flex-col gap-1 px-1">
+                            <Listbox.Options
+                              className="absolute z-50 mb-2 w-full max-h-48 overflow-y-auto bg-gray-900 rounded-xl shadow-2xl py-1 flex flex-col gap-1 px-1"
+                              style={{
+                                top: idx < 2 ? "100%" : "auto", // Abre para baixo nas duas primeiras opções
+                                bottom: idx < 2 ? "auto" : "100%", // Abre para cima nas demais
+                              }}
+                            >
                               {funcoes.map((f) => (
                                 <Listbox.Option
                                   key={f}
                                   value={f}
                                   className={({ active, selected }) =>
                                     `cursor-pointer text-center py-2 px-2 rounded-lg text-white text-base font-medium transition-all
-                                    ${
-                                      active
-                                        ? "bg-red-500 scale-100"
-                                        : "bg-gray-800"
-                                    }
+                                    ${active ? "bg-red-500 scale-100" : "bg-gray-800"}
                                     ${selected ? "ring-2 ring-red-400" : ""}`
                                   }
                                 >
@@ -318,7 +341,7 @@ const Administracao: React.FC = () => {
                   <th className="py-4 px-4 text-left font-semibold">Conta</th>
                   <th className="py-4 px-4 text-left font-semibold">Origem</th>
                   <th className="py-4 pr-4  font-semibold">Função</th>
-                  <th className="py-4 pr-36 font-semibold">Expiração</th>
+                  <th className="py-4 pr-14 font-semibold">Expiração</th>
                 </tr>
               </thead>
               <tbody>
@@ -381,18 +404,20 @@ const Administracao: React.FC = () => {
                                 />
                               </svg>
                             </Listbox.Button>
-                            <Listbox.Options className="absolute mt-2 left-1/2 -translate-x-1/2 w-44 max-h-48 overflow-y-auto bg-gray-900 rounded-xl shadow-2xl py-1 z-10 flex flex-col gap-1 px-1">
+                            <Listbox.Options
+                              className="absolute z-50 mb-2 w-full max-h-48 overflow-y-auto bg-gray-900 rounded-xl shadow-2xl py-1 flex flex-col gap-1 px-1"
+                              style={{
+                                top: idx < 2 ? "100%" : "auto", // Abre para baixo nas duas primeiras opções
+                                bottom: idx < 2 ? "auto" : "100%", // Abre para cima nas demais
+                              }}
+                            >
                               {funcoesMapoteca.map((f) => (
                                 <Listbox.Option
                                   key={f}
                                   value={f}
                                   className={({ active, selected }) =>
                                     `cursor-pointer text-center py-2 px-2 rounded-lg text-white text-base font-medium transition-all
-                                    ${
-                                      active
-                                        ? "bg-red-500 scale-100"
-                                        : "bg-gray-800"
-                                    }
+                                    ${active ? "bg-red-500 scale-100" : "bg-gray-800"}
                                     ${selected ? "ring-2 ring-red-400" : ""}`
                                   }
                                 >
@@ -448,11 +473,6 @@ const Administracao: React.FC = () => {
           )}
         </div>
       </main>
-      {/* Material Icons CDN */}
-      <link
-        href="https://fonts.googleapis.com/icon?family=Material+Icons"
-        rel="stylesheet"
-      ></link>
     </div>
   );
 };

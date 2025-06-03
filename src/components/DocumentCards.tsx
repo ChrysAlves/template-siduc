@@ -13,11 +13,11 @@ interface DocumentData {
   id: number;
   number: string;
   status:
-    | "aprovado"
-    | "aprovado_registrado"
-    | "aprovado_aguardando"
-    | "anulado"
-    | "nao_registrado";
+  | "aprovado"
+  | "aprovado_registrado"
+  | "aprovado_aguardando"
+  | "anulado"
+  | "nao_registrado";
   sei: string;
   dataCartorio: string;
   ra: string;
@@ -67,6 +67,7 @@ const parseNumber = (number: string) => {
 };
 
 interface DocumentCardsProps {
+  documents: DocumentData[]; // <- necessário agora
   isInicialAdm?: boolean;
   onViewFile?: (doc: DocumentData, fileLabel: string) => void;
 }
@@ -105,9 +106,8 @@ const DocumentCard = ({
 
   return (
     <Card
-      className={`shadow-md hover:shadow-lg transition-shadow cursor-pointer select-none ${
-        expanded ? "py-4" : "py-1"
-      }`}
+      className={`shadow-md hover:shadow-lg transition-shadow cursor-pointer select-none ${expanded ? "py-4" : "py-1"
+        }`}
       onClick={onExpand}
     >
       <CardHeader className={`pb-2 pt-2 ${expanded ? "" : "py-1"}`}>
@@ -124,9 +124,8 @@ const DocumentCard = ({
             )}
           </span>
           <span
-            className={`text-base px-3 py-1 rounded font-bold ${
-              statusColors[doc.status]
-            }`}
+            className={`text-base px-3 py-1 rounded font-bold ${statusColors[doc.status]
+              }`}
           >
             {statusLabels[doc.status]}
           </span>
@@ -233,99 +232,46 @@ const DocumentCard = ({
 };
 
 const DocumentCards: React.FC<DocumentCardsProps> = ({
+  documents,
   isInicialAdm,
   onViewFile,
 }) => {
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
   // Exemplo de documentos com os novos status:
-  const documents: DocumentData[] = [
-    {
-      id: 1,
-      number: "URB/MDE/PSG 001-2024",
-      status: "aprovado",
-      sei: "2345678-2024",
-      dataCartorio: "10/05/2024",
-      ra: "Paranoá",
-      processoAlteracao: "ALT-2024-001",
-    },
-    {
-      id: 2,
-      number: "URB/MDE/PSG 002-2024",
-      status: "aprovado_registrado",
-      sei: "2345679-2024",
-      dataCartorio: "12/05/2024",
-      ra: "Ceilândia",
-      processoAlteracao: null,
-    },
-    {
-      id: 3,
-      number: "URB/MDE/PSG 003-2024",
-      status: "aprovado_aguardando",
-      sei: "2345680-2024",
-      dataCartorio: "13/05/2024",
-      ra: "Asa Sul",
-      processoAlteracao: "ALT-2024-002",
-    },
-    {
-      id: 4,
-      number: "URB/MDE/PSG 004-2024",
-      status: "anulado",
-      sei: "2345681-2024",
-      dataCartorio: "14/05/2024",
-      ra: "Samambaia",
-      processoAlteracao: null,
-    },
-    {
-      id: 5,
-      number: "URB/MDE/PSG 005-2024",
-      status: "nao_registrado",
-      sei: "2345682-2024",
-      dataCartorio: "15/05/2024",
-      ra: "Águas Claras",
-      processoAlteracao: "ALT-2024-003",
-    },
-    {
-      id: 6,
-      number: "URB/MDE/PSG 006-2024",
-      status: "anulado",
-      sei: "2345683-2024",
-      dataCartorio: "16/05/2024",
-      ra: "Paranoá",
-      processoAlteracao: null,
-    },
-    {
-      id: 7,
-      number: "URB/MDE/PSG 007-2024",
-      status: "aprovado",
-      sei: "2345684-2024",
-      dataCartorio: "17/05/2024",
-      ra: "Ceilândia",
-      processoAlteracao: "ALT-2024-004",
-    },
-    {
-      id: 8,
-      number: "URB/MDE/PSG 008-2024",
-      status: "anulado",
-      sei: "2345685-2024",
-      dataCartorio: "18/05/2024",
-      ra: "Samambaia",
-      processoAlteracao: null,
-    },
-    {
-      id: 9,
-      number: "URB/MDE/PSG 009-2024",
-      status: "anulado",
-      sei: "2345686-2024",
-      dataCartorio: "19/05/2024",
-      ra: "Águas Claras",
-      processoAlteracao: "ALT-2024-005",
-    },
-  ];
+  const allDocuments: DocumentData[] = [
+    { id: 1, number: "URB/MDE/PSG 001-2024", status: "aprovado", sei: "2345678-2024", dataCartorio: "10/05/2024", ra: "Paranoá", processoAlteracao: "ALT-2024-001" },
+    { id: 2, number: "URB/MDE/PSG 002-2024", status: "aprovado_registrado", sei: "2345679-2024", dataCartorio: "12/05/2024", ra: "Ceilândia", processoAlteracao: null },
+    { id: 3, number: "URB/MDE/PSG 003-2024", status: "aprovado_aguardando", sei: "2345680-2024", dataCartorio: "13/05/2024", ra: "Asa Sul", processoAlteracao: "ALT-2024-002" },
+    { id: 4, number: "URB/MDE/PSG 004-2024", status: "anulado", sei: "2345681-2024", dataCartorio: "14/05/2024", ra: "Samambaia", processoAlteracao: null },
+    { id: 5, number: "URB/MDE/PSG 005-2024", status: "nao_registrado", sei: "2345682-2024", dataCartorio: "15/05/2024", ra: "Águas Claras", processoAlteracao: "ALT-2024-003" },
+    { id: 6, number: "URB/MDE/PSG 006-2024", status: "aprovado", sei: "2345683-2024", dataCartorio: "16/05/2024", ra: "Paranoá", processoAlteracao: null },
+    { id: 7, number: "URB/MDE/PSG 007-2024", status: "aprovado_aguardando", sei: "2345684-2024", dataCartorio: "17/05/2024", ra: "Ceilândia", processoAlteracao: "ALT-2024-004" },
+    { id: 8, number: "URB/MDE/PSG 008-2024", status: "aprovado_registrado", sei: "2345685-2024", dataCartorio: "18/05/2024", ra: "Taguatinga", processoAlteracao: null },
+    { id: 9, number: "URB/MDE/PSG 009-2024", status: "anulado", sei: "2345686-2024", dataCartorio: "19/05/2024", ra: "Sobradinho", processoAlteracao: null },
+    { id: 10, number: "URB/MDE/PSG 010-2024", status: "aprovado", sei: "2345687-2024", dataCartorio: "20/05/2024", ra: "Guará", processoAlteracao: "ALT-2024-005" },
+    { id: 11, number: "URB/MDE/PSG 011-2024", status: "aprovado_aguardando", sei: "2345688-2024", dataCartorio: "21/05/2024", ra: "Plano Piloto", processoAlteracao: null },
+    { id: 12, number: "URB/MDE/PSG 012-2024", status: "nao_registrado", sei: "2345689-2024", dataCartorio: "22/05/2024", ra: "Águas Claras", processoAlteracao: "ALT-2024-006" },
+  { id: 13, number: "URB/MDE/PSG 013-2024", status: "aprovado_registrado", sei: "2345690-2024", dataCartorio: "23/05/2024", ra: "Samambaia", processoAlteracao: null },
+  { id: 14, number: "URB/MDE/PSG 014-2024", status: "aprovado", sei: "2345691-2024", dataCartorio: "24/05/2024", ra: "Paranoá", processoAlteracao: "ALT-2024-007" },
+  { id: 16, number: "URB/MDE/PSG 016-2024", status: "aprovado", sei: "2345693-2024", dataCartorio: "26/05/2024", ra: "Taguatinga", processoAlteracao: "ALT-2024-008" },
+  { id: 17, number: "URB/MDE/PSG 017-2024", status: "aprovado_aguardando", sei: "2345694-2024", dataCartorio: "27/05/2024", ra: "Sobradinho", processoAlteracao: null },
+  { id: 18, number: "URB/MDE/PSG 018-2024", status: "aprovado_registrado", sei: "2345695-2024", dataCartorio: "28/05/2024", ra: "Guará", processoAlteracao: null },
+  { id: 19, number: "URB/MDE/PSG 019-2024", status: "nao_registrado", sei: "2345696-2024", dataCartorio: "29/05/2024", ra: "Plano Piloto", processoAlteracao: "ALT-2024-009" },
+  { id: 20, number: "URB/MDE/PSG 020-2024", status: "aprovado", sei: "2345697-2024", dataCartorio: "30/05/2024", ra: "Águas Claras", processoAlteracao: null },
+];
+
+  // Filtrar documentos com base no `isInicialAdm`
+  const filteredDocuments = allDocuments.filter((doc) => {
+    if (!isInicialAdm && (doc.status === "anulado" || doc.status === "nao_registrado")) {
+      return false; // Excluir "anulado" e "não registrado" se não for InicialAdm
+    }
+    return true;
+  });
 
   return (
     <div className="grid grid-cols-1 gap-6 mb-8 items-start">
-      {documents.map((doc) => (
+      {filteredDocuments.map((doc) => (
         <DocumentCard
           key={doc.id}
           document={doc}

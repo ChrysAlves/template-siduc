@@ -55,15 +55,42 @@ const Index = () => {
   const [itemsPerPage, setItemsPerPage] = useState(5); // Número de documentos por página
 
   // Simulação de documentos
-  const documents = Array.from({ length: 50 }, (_, i) => ({
+  const allDocuments = Array.from({ length: 50 }, (_, i) => ({
     id: i + 1,
-    title: `Documento ${i + 1}`,
+    number: `URB/MDE/PSG ${i + 1}-2024`,
+    status:
+      (i % 5 === 0
+        ? "anulado"
+        : i % 5 === 1
+        ? "nao_registrado"
+        : i % 5 === 2
+        ? "aprovado"
+        : i % 5 === 3
+        ? "aprovado_registrado"
+        : "aprovado_aguardando") as
+        | "anulado"
+        | "nao_registrado"
+        | "aprovado"
+        | "aprovado_registrado"
+        | "aprovado_aguardando",
+    sei: `23456${i + 1}-2024`,
+    dataCartorio: `10/05/202${i % 10}`,
+    ra: i % 2 === 0 ? "Paranoá" : "Ceilândia",
   }));
 
+  // Filtrar documentos com base no contexto
+  const isInicialAdm = false; // Defina conforme necessário ou obtenha de props/contexto
+  const filteredDocuments = allDocuments.filter((doc) => {
+    if (!isInicialAdm && (doc.status === "anulado" || doc.status === "nao_registrado")) {
+      return false;
+    }
+    return true;
+  });
+
   // Cálculo de paginação
-  const totalPages = Math.ceil(documents.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredDocuments.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentDocuments = documents.slice(
+  const currentDocuments = filteredDocuments.slice(
     startIndex,
     startIndex + itemsPerPage
   );
@@ -72,6 +99,11 @@ const Index = () => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
+  };
+
+  const handleItemsPerPageChange = (value: number) => {
+    setItemsPerPage(value);
+    setCurrentPage(1); // Reinicia para a primeira página
   };
 
   return (
@@ -115,15 +147,21 @@ const Index = () => {
             <h2 className="text-2xl font-semibold mb-6">
               Documentos Disponíveis
             </h2>
-            <p className="font-semibold mr-2">Projetos encontrados: 11</p>
+            <p className="font-semibold mr-2">
+              Projetos encontrados: {filteredDocuments.length}
+            </p>
           </div>
 
           <div className="flex flex-col-reverse lg:flex-row gap-6">
+            {/* Filtros na esquerda */}
             <div className="lg:w-1/4">
               <SideFilters />
             </div>
+
+            {/* Lista de documentos */}
             <div className="lg:w-3/4">
               <DocumentCards
+                documents={currentDocuments}
                 isInicialAdm={false}
                 onViewFile={(doc, fileLabel) => {
                   setViewerDoc(doc);
@@ -141,24 +179,18 @@ const Index = () => {
                   Anterior
                 </button>
 
-                {Array.from({ length: Math.min(totalPages, 4) }, (_, i) => {
-                  const page = currentPage <= 2 ? i + 1 : currentPage - 2 + i;
-                  if (page > totalPages) return null;
-
-                  return (
-                    <button
-                      key={page}
-                      className={`px-4 py-2 rounded ${
-                        currentPage === page
-                          ? "bg-red-700 text-white"
-                          : "bg-gray-200 hover:bg-gray-300"
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <button
+                    key={i + 1}
+                    className={`px-4 py-2 rounded ${currentPage === i + 1
+                      ? "bg-red-700 text-white"
+                      : "bg-gray-200 hover:bg-gray-300"
                       }`}
-                      onClick={() => handlePageChange(page)}
-                    >
-                      {page}
-                    </button>
-                  );
-                })}
+                    onClick={() => handlePageChange(i + 1)}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
 
                 <button
                   className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
@@ -177,10 +209,9 @@ const Index = () => {
                     id="itemsPerPage"
                     className="border border-stone-400 rounded px-2 py-1 text-sm"
                     value={itemsPerPage}
-                    onChange={(e) => {
-                      setItemsPerPage(Number(e.target.value));
-                      setCurrentPage(1); // Reinicia para a primeira página
-                    }}
+                    onChange={(e) =>
+                      handleItemsPerPageChange(Number(e.target.value))
+                    }
                   >
                     <option value={5}>5</option>
                     <option value={10}>10</option>
