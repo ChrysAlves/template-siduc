@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Download, Eye, ChevronUp, ChevronDown } from "lucide-react";
+import { Download, Eye, ChevronUp, ChevronDown, Settings } from "lucide-react";
 
 interface SubDocument {
   id: number;
@@ -9,15 +9,15 @@ interface SubDocument {
   type: string;
 }
 
-interface Document {
+interface DocumentData {
   id: number;
   number: string;
   status:
-    | "aprovado"
-    | "aprovado_registrado"
-    | "aprovado_aguardando"
-    | "anulado"
-    | "nao_registrado";
+  | "aprovado"
+  | "aprovado_registrado"
+  | "aprovado_aguardando"
+  | "anulado"
+  | "nao_registrado";
   sei: string;
   dataCartorio: string;
   ra: string;
@@ -34,7 +34,7 @@ const statusColors: Record<string, string> = {
 };
 
 // Função para exibir o texto correto do status
-const statusLabels: Record<Document["status"], string> = {
+const statusLabels: Record<DocumentData["status"], string> = {
   aprovado: "Aprovado",
   aprovado_registrado: "Aprovado - Registrado em cartório",
   aprovado_aguardando: "Aprovado - Aguardando Registro",
@@ -66,55 +66,48 @@ const parseNumber = (number: string) => {
   };
 };
 
+interface DocumentCardsProps {
+  documents: DocumentData[]; // <- necessário agora
+  isInicialAdm?: boolean;
+  onViewFile?: (doc: DocumentData, fileLabel: string) => void;
+}
+
 const DocumentCard = ({
-  document,
+  document: doc,
   expanded,
   onExpand,
+  isInicialAdm,
+  onViewFile,
 }: {
-  document: Document;
+  document: DocumentData;
   expanded: boolean;
   onExpand: () => void;
+  isInicialAdm?: boolean;
+  onViewFile?: (doc: DocumentData, fileLabel: string) => void;
 }) => {
-  const { urb, middle, suffix } = parseNumber(document.number);
+  const { urb, middle, suffix } = parseNumber(doc.number);
 
-  // Exemplo de anexos fictícios para cada documento
+  // Exemplo de arquivos relacionados ao documento
   const files = [
-    { name: `${document.number}-anexo1`, label: "Matriz de Localização", icon: <Download className="w-4 h-4" /> },
-    { name: `${document.number}-anexo2`, label: "Planta de Situação", icon: <Download className="w-4 h-4" /> },
-    { name: `${document.number}-anexo3`, label: "Memorial Descritivo", icon: <Download className="w-4 h-4" /> },
+    { name: `${doc.number}-anexo1`, label: "URB 001/2024" },
+    { name: `${doc.number}-anexo2`, label: "MDE 001/2024" },
+    { name: `${doc.number}-anexo3`, label: "PSG 001/2024" },
   ];
 
-  // Função para baixar um arquivo individual
   const handleDownload = (fileName: string) => {
     const url = `/arquivos/${fileName}.pdf`;
-
-    // Verifica se o ambiente é o navegador
-    if (typeof window !== "undefined" && typeof document !== "undefined") {
-      try {
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = fileName;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } catch (error) {
-        console.error("Erro ao tentar baixar o arquivo:", error);
-      }
-    } else {
-      console.error("Ambiente não suporta downloads.");
-    }
-  };
-
-  // Função para baixar todos os arquivos
-  const handleDownloadAll = () => {
-    files.forEach((file) => handleDownload(file.name));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
     <Card
-      className={`shadow-md hover:shadow-lg transition-shadow cursor-pointer select-none ${
-        expanded ? "py-4" : "py-1"
-      }`}
+      className={`shadow-md hover:shadow-lg transition-shadow cursor-pointer select-none ${expanded ? "py-4" : "py-1"
+        }`}
       onClick={onExpand}
     >
       <CardHeader className={`pb-2 pt-2 ${expanded ? "" : "py-1"}`}>
@@ -131,86 +124,103 @@ const DocumentCard = ({
             )}
           </span>
           <span
-            className={`text-base px-3 py-1 rounded font-bold ${
-              statusColors[document.status]
-            }`}
+            className={`text-base px-3 py-1 rounded font-bold ${statusColors[doc.status]
+              }`}
           >
-            {statusLabels[document.status]}
+            {statusLabels[doc.status]}
           </span>
         </div>
+        {/* Botão de engrenagem no canto direito, visível apenas se expandido e na página InicialAdm */}
+        {expanded && isInicialAdm && (
+          <div className="absolute top-2 right-2">
+            <button
+              type="button"
+              className="text-gray-700 hover:text-gray-900 transition"
+              onClick={(e) => {
+                e.stopPropagation();
+                console.log("Engrenagem clicada para o documento:", doc.id);
+              }}
+              title="Configurações"
+            >
+              <Settings className="w-5 h-5" />
+            </button>
+          </div>
+        )}
       </CardHeader>
       <CardContent className={expanded ? "pt-6 pb-4" : "py-0"}>
         {expanded && (
-          <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
-            {/* Esquerda: RA e Processo de alteração */}
-            <div>
-              <p>
-                <span className="font-semibold">RA:</span> {document.ra}
-              </p>
-              <p>
-                <span className="font-semibold">Processo de alteração:</span>{" "}
-                {document.processoAlteracao || "N/A"}
-              </p>
-              {(document.status === "aprovado" ||
-                document.status === "aprovado_registrado" ||
-                document.status === "aprovado_aguardando") && (
-                <p>
-                  <span className="font-semibold">
-                    Legislação de aprovação:
-                  </span>{" "}
-                  Portaria nº 123/2024
-                </p>
-              )}
-            </div>
-            {/* Direita: Processo SEI e Data registro (condicional) */}
-            <div className="text-right min-w-[180px]">
-              <p>
-                <span className="font-semibold">Processo SEI:</span>{" "}
-                {document.sei}
-              </p>
-              {document.status === "aprovado_registrado" && (
-                <p>
-                  <span className="font-semibold">
-                    Data registro em cartório:
-                  </span>{" "}
-                  {document.dataCartorio}
-                </p>
-              )}
-            </div>
-          </div>
-        )}
-        {expanded && (
-          <div className="mt-8">
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 shadow-inner">
-              <div className="font-semibold text-slate-700 mb-2 flex items-center gap-2">
-                <Download className="w-5 h-5 text-red-700" />
-                Anexos disponíveis
-              </div>
-              <button
-                type="button"
-                className="mb-4 flex items-center gap-2 bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded transition text-sm font-semibold shadow"
-                onClick={e => {
-                  e.stopPropagation();
-                  handleDownloadAll();
-                }}
-              >
-                <Download className="w-4 h-4" />
-                Baixar todos os anexos
-              </button>
-              <div className="flex flex-wrap gap-3">
-                {files.map((file, idx) => (
+          <div>
+            <p>
+              <strong>SEI:</strong> {doc.sei}
+            </p>
+            <p>
+              <strong>RA:</strong> {doc.ra}
+            </p>
+            <p>
+              <strong>Processo de Alteração:</strong>{" "}
+              {doc.processoAlteracao || "N/A"}
+            </p>
+            <p>
+              <strong>Data de Registro:</strong> {doc.dataCartorio}
+            </p>
+            {/* Aba de arquivos */}
+            <div className="mt-4 relative">
+              <div className="flex justify-between items-center mb-2">
+                <h4 className="font-semibold text-gray-700">Arquivos</h4>
+
+                {/* Botão de engrenagem para edição, visível apenas na página InicialAdm */}
+                {isInicialAdm && (
                   <button
-                    key={file.name}
                     type="button"
-                    className="flex items-center gap-2 bg-white border border-slate-300 hover:bg-red-50 text-slate-800 px-3 py-2 rounded shadow-sm transition text-sm font-medium"
-                    onClick={e => {
+                    className="text-gray-700 hover:text-gray-900 transition absolute -top-6 right-0"
+                    onClick={(e) => {
                       e.stopPropagation();
-                      handleDownload(file.name);
+                      console.log(
+                        "Engrenagem de edição clicada para o documento:",
+                        doc.id
+                      );
                     }}
+                    title="Editar documento"
                   >
-                    {file.icon}
-                    {file.label}
+                    <Settings className="w-5 h-5" />
                   </button>
+                )}
+              </div>
+
+              <div className="flex flex-col gap-2">
+                {files.map((file) => (
+                  <div
+                    key={file.name}
+                    className="flex items-center justify-between bg-gray-100 px-3 py-2 rounded"
+                  >
+                    <span className="text-gray-800">{file.label}</span>
+                    <div className="flex items-center gap-2">
+                      {/* Botão de download */}
+                      <button
+                        type="button"
+                        className="hover:text-red-600 flex items-center gap-1"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDownload(file.name);
+                        }}
+                        title="Baixar arquivo"
+                      >
+                        <Download className="w-5 h-5" />
+                      </button>
+                      {/* Botão de visualizar */}
+                      <button
+                        type="button"
+                        className="hover:text-red-600 flex items-center gap-1"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (onViewFile) onViewFile(doc, file.label);
+                        }}
+                        title="Visualizar arquivo"
+                      >
+                        <Eye className="w-5 h-5" />
+                      </button>
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -221,102 +231,54 @@ const DocumentCard = ({
   );
 };
 
-const DocumentCards = () => {
+const DocumentCards: React.FC<DocumentCardsProps> = ({
+  documents,
+  isInicialAdm,
+  onViewFile,
+}) => {
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
   // Exemplo de documentos com os novos status:
-  const documents: Document[] = [
-    {
-      id: 1,
-      number: "URB/MDE/PSG 001-2024",
-      status: "aprovado",
-      sei: "2345678-2024",
-      dataCartorio: "10/05/2024",
-      ra: "Paranoá",
-      processoAlteracao: "ALT-2024-001",
-    },
-    {
-      id: 2,
-      number: "URB/MDE/PSG 002-2024",
-      status: "aprovado_registrado",
-      sei: "2345679-2024",
-      dataCartorio: "12/05/2024",
-      ra: "Ceilândia",
-      processoAlteracao: null,
-    },
-    {
-      id: 3,
-      number: "URB/MDE/PSG 003-2024",
-      status: "aprovado_aguardando",
-      sei: "2345680-2024",
-      dataCartorio: "13/05/2024",
-      ra: "Asa Sul",
-      processoAlteracao: "ALT-2024-002",
-    },
-    {
-      id: 4,
-      number: "URB/MDE/PSG 004-2024",
-      status: "anulado",
-      sei: "2345681-2024",
-      dataCartorio: "14/05/2024",
-      ra: "Samambaia",
-      processoAlteracao: null,
-    },
-    {
-      id: 5,
-      number: "URB/MDE/PSG 005-2024",
-      status: "nao_registrado",
-      sei: "2345682-2024",
-      dataCartorio: "15/05/2024",
-      ra: "Águas Claras",
-      processoAlteracao: "ALT-2024-003",
-    },
-    {
-      id: 6,
-      number: "URB/MDE/PSG 006-2024",
-      status: "anulado",
-      sei: "2345683-2024",
-      dataCartorio: "16/05/2024",
-      ra: "Paranoá",
-      processoAlteracao: null,
-    },
-    {
-      id: 7,
-      number: "URB/MDE/PSG 007-2024",
-      status: "aprovado",
-      sei: "2345684-2024",
-      dataCartorio: "17/05/2024",
-      ra: "Ceilândia",
-      processoAlteracao: "ALT-2024-004",
-    },
-    {
-      id: 8,
-      number: "URB/MDE/PSG 008-2024",
-      status: "anulado",
-      sei: "2345685-2024",
-      dataCartorio: "18/05/2024",
-      ra: "Samambaia",
-      processoAlteracao: null,
-    },
-    {
-      id: 9,
-      number: "URB/MDE/PSG 009-2024",
-      status: "anulado",
-      sei: "2345686-2024",
-      dataCartorio: "19/05/2024",
-      ra: "Águas Claras",
-      processoAlteracao: "ALT-2024-005",
-    },
-  ];
+  const allDocuments: DocumentData[] = [
+    { id: 1, number: "URB/MDE/PSG 001-2024", status: "aprovado", sei: "2345678-2024", dataCartorio: "10/05/2024", ra: "Paranoá", processoAlteracao: "ALT-2024-001" },
+    { id: 2, number: "URB/MDE/PSG 002-2024", status: "aprovado_registrado", sei: "2345679-2024", dataCartorio: "12/05/2024", ra: "Ceilândia", processoAlteracao: null },
+    { id: 3, number: "URB/MDE/PSG 003-2024", status: "aprovado_aguardando", sei: "2345680-2024", dataCartorio: "13/05/2024", ra: "Asa Sul", processoAlteracao: "ALT-2024-002" },
+    { id: 4, number: "URB/MDE/PSG 004-2024", status: "anulado", sei: "2345681-2024", dataCartorio: "14/05/2024", ra: "Samambaia", processoAlteracao: null },
+    { id: 5, number: "URB/MDE/PSG 005-2024", status: "nao_registrado", sei: "2345682-2024", dataCartorio: "15/05/2024", ra: "Águas Claras", processoAlteracao: "ALT-2024-003" },
+    { id: 6, number: "URB/MDE/PSG 006-2024", status: "aprovado", sei: "2345683-2024", dataCartorio: "16/05/2024", ra: "Paranoá", processoAlteracao: null },
+    { id: 7, number: "URB/MDE/PSG 007-2024", status: "aprovado_aguardando", sei: "2345684-2024", dataCartorio: "17/05/2024", ra: "Ceilândia", processoAlteracao: "ALT-2024-004" },
+    { id: 8, number: "URB/MDE/PSG 008-2024", status: "aprovado_registrado", sei: "2345685-2024", dataCartorio: "18/05/2024", ra: "Taguatinga", processoAlteracao: null },
+    { id: 9, number: "URB/MDE/PSG 009-2024", status: "anulado", sei: "2345686-2024", dataCartorio: "19/05/2024", ra: "Sobradinho", processoAlteracao: null },
+    { id: 10, number: "URB/MDE/PSG 010-2024", status: "aprovado", sei: "2345687-2024", dataCartorio: "20/05/2024", ra: "Guará", processoAlteracao: "ALT-2024-005" },
+    { id: 11, number: "URB/MDE/PSG 011-2024", status: "aprovado_aguardando", sei: "2345688-2024", dataCartorio: "21/05/2024", ra: "Plano Piloto", processoAlteracao: null },
+    { id: 12, number: "URB/MDE/PSG 012-2024", status: "nao_registrado", sei: "2345689-2024", dataCartorio: "22/05/2024", ra: "Águas Claras", processoAlteracao: "ALT-2024-006" },
+  { id: 13, number: "URB/MDE/PSG 013-2024", status: "aprovado_registrado", sei: "2345690-2024", dataCartorio: "23/05/2024", ra: "Samambaia", processoAlteracao: null },
+  { id: 14, number: "URB/MDE/PSG 014-2024", status: "aprovado", sei: "2345691-2024", dataCartorio: "24/05/2024", ra: "Paranoá", processoAlteracao: "ALT-2024-007" },
+  { id: 16, number: "URB/MDE/PSG 016-2024", status: "aprovado", sei: "2345693-2024", dataCartorio: "26/05/2024", ra: "Taguatinga", processoAlteracao: "ALT-2024-008" },
+  { id: 17, number: "URB/MDE/PSG 017-2024", status: "aprovado_aguardando", sei: "2345694-2024", dataCartorio: "27/05/2024", ra: "Sobradinho", processoAlteracao: null },
+  { id: 18, number: "URB/MDE/PSG 018-2024", status: "aprovado_registrado", sei: "2345695-2024", dataCartorio: "28/05/2024", ra: "Guará", processoAlteracao: null },
+  { id: 19, number: "URB/MDE/PSG 019-2024", status: "nao_registrado", sei: "2345696-2024", dataCartorio: "29/05/2024", ra: "Plano Piloto", processoAlteracao: "ALT-2024-009" },
+  { id: 20, number: "URB/MDE/PSG 020-2024", status: "aprovado", sei: "2345697-2024", dataCartorio: "30/05/2024", ra: "Águas Claras", processoAlteracao: null },
+];
+
+  // Filtrar documentos com base no `isInicialAdm`
+  const filteredDocuments = allDocuments.filter((doc) => {
+    if (!isInicialAdm && (doc.status === "anulado" || doc.status === "nao_registrado")) {
+      return false; // Excluir "anulado" e "não registrado" se não for InicialAdm
+    }
+    return true;
+  });
 
   return (
     <div className="grid grid-cols-1 gap-6 mb-8 items-start">
-      {documents.map((doc) => (
+      {filteredDocuments.map((doc) => (
         <DocumentCard
           key={doc.id}
           document={doc}
           expanded={expandedId === doc.id}
           onExpand={() => setExpandedId(expandedId === doc.id ? null : doc.id)}
+          isInicialAdm={isInicialAdm}
+          onViewFile={onViewFile}
         />
       ))}
     </div>

@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Folder, 
-  Upload, 
-  Search, 
+import {
+  Folder,
+  Upload,
+  Search,
   Filter,
   MoreVertical,
   FolderPlus,
@@ -28,7 +28,6 @@ interface FileItem {
   type: 'folder' | 'dwg' | 'shp' | 'pdf' | 'jpg' | 'kml';
   size?: string;
   modified: string;
-  status: 'aprovado' | 'pendente' | 'rejeitado';
 }
 
 const FileManager = () => {
@@ -38,40 +37,33 @@ const FileManager = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const mockFiles: FileItem[] = [
-    { id: '1', name: 'Projetos Urbanísticos', type: 'folder', modified: '2024-05-15', status: 'aprovado' },
-    { id: '2', name: 'Mapas Cartográficos', type: 'folder', modified: '2024-05-14', status: 'aprovado' },
-    { id: '3', name: 'Infraestrutura', type: 'folder', modified: '2024-05-13', status: 'pendente' },
-    { id: '4', name: 'Planta_Loteamento_001.dwg', type: 'dwg', size: '2.4 MB', modified: '2024-05-12', status: 'aprovado' },
-    { id: '5', name: 'Malha_Viaria.shp', type: 'shp', size: '15.7 MB', modified: '2024-05-11', status: 'pendente' },
-    { id: '6', name: 'Relatorio_Tecnico.pdf', type: 'pdf', size: '1.2 MB', modified: '2024-05-10', status: 'rejeitado' },
-    { id: '7', name: 'Foto_Aerea_Setor_A.jpg', type: 'jpg', size: '8.9 MB', modified: '2024-05-09', status: 'aprovado' },
-    { id: '8', name: 'Coordenadas_GPS.kml', type: 'kml', size: '0.5 MB', modified: '2024-05-08', status: 'pendente' },
+    { id: '1', name: 'Paranóa', type: 'folder',size: '165 GB', modified: '2024-05-15' },
+    { id: '2', name: 'Asa Sul', type: 'folder', size: '98.4 GB',modified: '2024-05-14' },
+    { id: '3', name: 'Lago norte', type: 'folder', size: '76 GB',modified: '2024-05-13' },
+    { id: '4', name: 'Lago sul', type: 'folder', size: '2.4 GB', modified: '2024-05-12' },
+    { id: '5', name: 'Samambaia', type: 'folder', size: '15.7 GB', modified: '2024-05-11' },
+    { id: '6', name: 'Ceilândia', type: 'folder', size: '1.2 GB', modified: '2024-05-10' },
+    { id: '7', name: 'Águas Claras', type: 'folder', size: '8.9 GB', modified: '2024-05-09' },
+  
   ];
 
   const getFileIcon = (type: string) => {
     switch (type) {
       case 'folder': return '📁';
-      case 'dwg': return '📐';
-      case 'shp': return '🗺️';
-      case 'pdf': return '📄';
-      case 'jpg': return '🖼️';
-      case 'kml': return '📍';
+      case 'folder': return '📁';
+      case 'folder': return '📁';
+      case 'folder': return '📁';
+      case 'folder': return '📁';
+      case 'folder': return '📁';
       default: return '📄';
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'aprovado': return 'bg-sisduc-green text-white';
-      case 'pendente': return 'bg-sisduc-yellow text-black';
-      case 'rejeitado': return 'bg-red-500 text-white';
-      default: return 'bg-gray-500 text-white';
-    }
-  };
+
 
   const handleFileSelect = (fileId: string) => {
-    setSelectedFiles(prev => 
-      prev.includes(fileId) 
+    setSelectedFiles(prev =>
+      prev.includes(fileId)
         ? prev.filter(id => id !== fileId)
         : [...prev, fileId]
     );
@@ -80,7 +72,7 @@ const FileManager = () => {
   const breadcrumbs = currentPath.map((path, index) => (
     <span key={index} className="flex items-center">
       {index > 0 && <span className="mx-2 text-gray-400">/</span>}
-      <button 
+      <button
         className="text-sisduc-red hover:text-sisduc-red-dark"
         onClick={() => setCurrentPath(currentPath.slice(0, index + 1))}
       >
@@ -121,10 +113,6 @@ const FileManager = () => {
               className="pl-10 w-80"
             />
           </div>
-          <Button variant="outline">
-            <Filter className="w-4 h-4 mr-2" />
-            Filtros
-          </Button>
         </div>
       </div>
 
@@ -156,35 +144,15 @@ const FileManager = () => {
       {/* File List */}
       <div className="bg-white rounded-lg border">
         <div className="grid grid-cols-12 gap-4 p-4 border-b bg-gray-50 font-medium text-sm text-gray-600">
-          <div className="col-span-1">
-            <input 
-              type="checkbox" 
-              onChange={(e) => {
-                if (e.target.checked) {
-                  setSelectedFiles(mockFiles.map(f => f.id));
-                } else {
-                  setSelectedFiles([]);
-                }
-              }}
-            />
-          </div>
-          <div className="col-span-5">Nome</div>
+          <div className="col-span-6">Nome</div>
           <div className="col-span-2">Tamanho</div>
           <div className="col-span-2">Modificado</div>
-          <div className="col-span-1">Status</div>
           <div className="col-span-1">Ações</div>
         </div>
 
         {mockFiles.map((file) => (
           <div key={file.id} className="grid grid-cols-12 gap-4 p-4 border-b hover:bg-gray-50">
-            <div className="col-span-1">
-              <input 
-                type="checkbox"
-                checked={selectedFiles.includes(file.id)}
-                onChange={() => handleFileSelect(file.id)}
-              />
-            </div>
-            <div className="col-span-5 flex items-center space-x-3">
+            <div className="col-span-6 flex items-center space-x-3">
               <span className="text-2xl">{getFileIcon(file.type)}</span>
               <span className="font-medium">{file.name}</span>
             </div>
@@ -194,11 +162,7 @@ const FileManager = () => {
             <div className="col-span-2 text-sm text-gray-600">
               {file.modified}
             </div>
-            <div className="col-span-1">
-              <Badge className={`text-xs ${getStatusColor(file.status)}`}>
-                {file.status.charAt(0).toUpperCase() + file.status.slice(1)}
-              </Badge>
-            </div>
+
             <div className="col-span-1">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
