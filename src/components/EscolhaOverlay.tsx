@@ -83,7 +83,7 @@ const EscolhaOverlay: React.FC<EscolhaOverlayProps> = ({
       onSelect(option);
     } else if (option === "Pesquisas") {
       onClose();
-      navigate("/");
+      navigate("/InicialAdm");
     } else if (option === "Relatório") {
       onClose();
       onOpenReportModal();

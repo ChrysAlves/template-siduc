@@ -75,19 +75,17 @@ const Header = ({ onOpenReportModal }) => {
           <div className="flex items-center gap-4">
             <NavigationMenu>
               <NavigationMenuList>
-                <NavigationMenuItem>
-                  <NavigationMenuLink
-                    className={cn(
-                      "px-4 py-2 hover:text-red-700 transition-colors"
-                    )}
-                    href="/"
-                  >
-                    Início
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
                 {isLogged && (
                   <>
                     <NavigationMenuItem>
+                      <NavigationMenuLink
+                        className={cn(
+                          "px-4 py-2 hover:text-red-700 transition-colors"
+                        )}
+                        href="/inicialAdm"
+                      >
+                        Pesquisas
+                      </NavigationMenuLink>
                       <NavigationMenuLink
                         className={cn(
                           "px-4 py-2 hover:text-red-700 transition-colors"
@@ -99,14 +97,6 @@ const Header = ({ onOpenReportModal }) => {
                     </NavigationMenuItem>
 
                     <NavigationMenuItem>
-                      <NavigationMenuLink
-                        className={cn(
-                          "px-4 py-2 hover:text-red-700 transition-colors"
-                        )}
-                        href="/inicialAdm"
-                      >
-                        inicial Adm
-                      </NavigationMenuLink>
                     </NavigationMenuItem>
 
                     <NavigationMenuItem>
