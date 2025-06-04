@@ -255,54 +255,55 @@ const Mapoteca = () => {
                         </div>
                     </div>
                     <div className="divide-y divide-gray-200">
-                        {filteredFiles.map((file) => (
-                            <div
-                                key={file.id}
-                                draggable
-                                onDragStart={() => handleDragStart(file)}
-                                onDragOver={(e) => e.preventDefault()}
-                                onDrop={(e) => {
-                                    e.preventDefault();
-                                    const draggedFileId = copiedFile?.id;
-                                    if (draggedFileId) {
-                                        const draggedFile = files.find((f) => f.id === draggedFileId);
-                                        if (draggedFile) handleDrop(file, draggedFile);
-                                    }
-                                }}
-                                className="grid grid-cols-12 gap-4 px-6 py-4 hover:bg-gray-50 transition-colors duration-150 cursor-pointer"
-                                onClick={() => file.type === "folder" && handleFolderClick(file.id, file.name)}
-                            >
-                                <div className="col-span-5 flex items-center space-x-3">
-                                    {file.type === "folder" ? "📂" : "📄"}
-                                    <span>{file.name}</span>
-                                </div>
-                                <div className="col-span-2">{file.size || "-"}</div>
-                                <div className="col-span-3">{file.modified || "-"}</div>
-                                <div className="col-span-2">
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <button className="p-1">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+                            {filteredFiles.map((file) => (
+                                <div
+                                    key={file.id}
+                                    draggable
+                                    onDragStart={() => handleDragStart(file)}
+                                    onDragOver={(e) => e.preventDefault()}
+                                    onDrop={(e) => {
+                                        e.preventDefault();
+                                        const draggedFileId = copiedFile?.id;
+                                        if (draggedFileId) {
+                                            const draggedFile = files.find((f) => f.id === draggedFileId);
+                                            if (draggedFile) handleDrop(file, draggedFile);
+                                        }
+                                    }}
+                                    className="bg-white shadow rounded-lg p-4 hover:bg-gray-50 transition-colors duration-150 cursor-pointer"
+                                    onClick={() => file.type === "folder" && handleFolderClick(file.id, file.name)}
+                                >
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center space-x-3">
+                                            {file.type === "folder" ? "📂" : "📄"}
+                                            <span className="font-semibold">{file.name}</span>
+                                        </div>
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger>
                                                 <MoreHorizontal size={16} />
-                                            </button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent>
-                                            <DropdownMenuItem onClick={() => handleFileAction("download", file)}>
-                                                <Download size={16} />
-                                                <span>Download</span>
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => handleFileAction("rename", file)}>
-                                                <Edit size={16} />
-                                                <span>Renomear</span>
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => handleFileAction("delete", file)}>
-                                                <Trash2 size={16} />
-                                                <span>Excluir</span>
-                                            </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent>
+                                                <DropdownMenuItem onClick={() => handleFileAction("rename", file)}>
+                                                    Renomear
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => handleFileAction("delete", file)}>
+                                                    Excluir
+                                                </DropdownMenuItem>
+                                                {file.type === "file" && (
+                                                    <DropdownMenuItem onClick={() => handleFileAction("download", file)}>
+                                                        Download
+                                                    </DropdownMenuItem>
+                                                )}
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    </div>
+                                    <div className="mt-2 text-sm text-gray-500">
+                                        <div>Tamanho: {file.size || "-"}</div>
+                                        <div>Modificado: {file.modified || "-"}</div>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
                 </div>
             </main>

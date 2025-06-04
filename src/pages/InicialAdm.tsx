@@ -4,9 +4,8 @@ import StatCards from "@/components/StatCards";
 import SearchBar from "@/components/SearchBar";
 import DocumentCards from "@/components/DocumentCards";
 import SideFilters from "@/components/SideFilters";
-import SearchOverlay from "@/components/SearchOverlay";
-import EscolhaOverlay from "@/components/EscolhaOverlay";
 import ViewerSidebar from "@/components/ViewerSidebar"; // Importação do visualizador
+import CadastroProjetoModal from "@/components/CadastroProjetoModal"; // Importação do modal de cadastro
 
 const InicialAdm = () => {
   const [showSearchOverlay, setShowSearchOverlay] = useState(true);
@@ -68,15 +67,6 @@ const InicialAdm = () => {
     // Implementar a lógica de pesquisa aqui
   };
 
-  // Função para lidar com seleção no EscolhaOverlay
-  const handleEscolhaSelect = (option: string) => {
-    console.log("Escolha selecionada:", option); // Para depuração
-    if (option === "Formulario") {
-      setShowEscolha(false); // Fecha o EscolhaOverlay
-      setShowFormulario(true); // Abre o FormularioOverlay
-    }
-    // outros casos...
-  };
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -101,15 +91,13 @@ const InicialAdm = () => {
                 showTypeFilters={false}
               />
             </div>
-            {/* Só mostra o botão se o usuário já fez login */}
-            {
-              <button
-                className="text-white bg-red-800 px-4 py-2 rounded shadow h-full"
-                onClick={() => setShowFormulario(true)}
-              >
-                Cadastrar Projeto
-              </button>
-            }
+            {/* Ajuste do botão para ter o mesmo estilo e altura do botão de Buscar */}
+            <button
+              className="text-white bg-red-700 hover:bg-red-800 px-3 py-1 rounded text-sm flex items-center justify-center"
+              onClick={() => setShowFormulario(true)}
+            >
+              Cadastrar Projeto
+            </button>
           </div>
         </section>
 
@@ -150,11 +138,10 @@ const InicialAdm = () => {
                 {Array.from({ length: totalPages }, (_, i) => (
                   <button
                     key={i + 1}
-                    className={`px-4 py-2 rounded ${
-                      currentPage === i + 1
+                    className={`px-4 py-2 rounded ${currentPage === i + 1
                         ? "bg-red-700 text-white"
                         : "bg-gray-200 hover:bg-gray-300"
-                    }`}
+                      }`}
                     onClick={() => handlePageChange(i + 1)}
                   >
                     {i + 1}
@@ -200,6 +187,12 @@ const InicialAdm = () => {
         onClose={() => setViewerOpen(false)}
         document={viewerDoc}
         selectedFile={viewerFile}
+      />
+
+      {/* MODAL DE CADASTRO DE PROJETO */}
+      <CadastroProjetoModal
+        isOpen={showFormulario}
+        onClose={() => setShowFormulario(false)}
       />
     </div>
   );
