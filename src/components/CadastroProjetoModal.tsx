@@ -95,9 +95,9 @@ const CadastroProjetoModal = ({ isOpen, onClose }) => {
         setNovoTipoDocumento({ nome: "", sigla: "", padrao: "" }); // Reseta os campos
     };
 
-    
 
-  if (!isOpen) return null;
+
+    if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -191,7 +191,7 @@ const CadastroProjetoModal = ({ isOpen, onClose }) => {
                                             <SelectItem value="MG">MG</SelectItem>
                                         </SelectContent>
                                     </Select>
-                                  <Button
+                                    <Button
                                         variant="outline"
                                         size="sm"
                                         type="button"
@@ -281,7 +281,19 @@ const CadastroProjetoModal = ({ isOpen, onClose }) => {
                             </div>
                         </div>
 
-                        {/* Checkboxes acima da observação */}
+                        {/* Observação */}
+                        <div className="space-y-2">
+                            <Label htmlFor="observacao">Observação</Label>
+                            <Textarea
+                                id="observacao"
+                                placeholder="Digite suas observações aqui..."
+                                rows={3}
+                                value={formData.observacao}
+                                onChange={(e) => handleInputChange("observacao", e.target.value)}
+                            />
+                        </div>
+
+
                         <div className="space-y-4">
                             <Label className="text-base font-medium">Status</Label>
                             <div className="flex gap-6">
@@ -306,17 +318,7 @@ const CadastroProjetoModal = ({ isOpen, onClose }) => {
                             </div>
                         </div>
 
-                        {/* Observação */}
-                        <div className="space-y-2">
-                            <Label htmlFor="observacao">Observação</Label>
-                            <Textarea
-                                id="observacao"
-                                placeholder="Digite suas observações aqui..."
-                                rows={3}
-                                value={formData.observacao}
-                                onChange={(e) => handleInputChange("observacao", e.target.value)}
-                            />
-                        </div>
+
 
                         {/* Checkboxes abaixo da observação */}
                         <div className="space-y-4">

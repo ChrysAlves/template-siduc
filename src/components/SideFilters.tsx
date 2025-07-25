@@ -109,23 +109,6 @@ const SideFilters = () => {
           </div>
         </FilterSection>
 
-        {/* Processo SEI */}
-        <FilterSection title="Processo SEI">
-          <input
-            type="text"
-            className="border rounded px-2 py-1 w-full"
-            placeholder="Digite o número do processo SEI"
-          />
-        </FilterSection>
-
-        {/* Processo de Alterações */}
-        <FilterSection title="Processo de Alterações">
-          <input
-            type="text"
-            className="border rounded px-2 py-1 w-full"
-            placeholder="Digite o número do processo de alteração"
-          />
-        </FilterSection>
 
         {/* Status */}
         <FilterSection title="Status">
