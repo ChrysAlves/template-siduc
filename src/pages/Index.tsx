@@ -115,12 +115,6 @@ const Index = () => {
 
         <section>{/* ... */}</section>
 
-        {/* <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">
-            Estatísticas de Documentos
-          </h2>
-          <StatCards />
-        </section> */}
 
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">Pesquisar Documentos</h2>
@@ -132,13 +126,6 @@ const Index = () => {
                 showTypeFilters={false}
               />
             </div>
-            {/* Só mostra o botão se o usuário já fez login */}
-            {/* <button
-              className="text-white bg-red-800 px-4 py-2 rounded shadow h-full"
-              onClick={() => setShowFormulario(true)}
-            >
-              Criar Formulário
-            </button> */}
           </div>
         </section>
 

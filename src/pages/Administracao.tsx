@@ -64,7 +64,7 @@ const membrosMapoteca = [
     nome: "Alexandre Cotins",
     usuario: "@05947975190",
     origem: "Herdado de SEDUH / DISIS",
-    funcao: "Com acesso",
+    funcao: "Editor",
     expiracao: "",
     cor: "bg-red-700",
     iniciais: "AC",
@@ -73,7 +73,7 @@ const membrosMapoteca = [
     nome: "Ana Caroline Evangelista da Silva",
     usuario: "@05831454165",
     origem: "Membro direto por Henrique Goffeau Garnier de Souza",
-    funcao: "Com acesso",
+    funcao: "Leitor",
     expiracao: "",
     cor: "bg-gray-500",
     iniciais: "AE",
@@ -109,7 +109,6 @@ const membrosMapoteca = [
 
 const funcoesMapoteca = [
   "Sem acesso",
-  "Com acesso",
   "Leitor",
   "Editor",
 ];
